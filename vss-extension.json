@@ -1,0 +1,36 @@
+{
+    "manifestVersion": 1,
+    "id": "azure-devops-extension",
+    "name": "Azure Devops Extension",
+    "version": "0.0.15",
+    "publisher": "AnhTuan",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],    
+    "description": "Azure Devops Extension",
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "icons": {
+        "default": "images/extension-icon.png"        
+    },
+    "files": [
+        {
+            "path": "azureDevopsExtension"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "azure-devops-extension",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "azureDevopsExtension"
+            }
+        }
+    ]
+}

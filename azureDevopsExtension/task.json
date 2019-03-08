@@ -1,0 +1,30 @@
+{
+    "id": "3e2e9ca7-557e-4ea9-bb6e-4f271abe0a94",
+    "name": "azure-devops-extension",
+    "friendlyName": "azure devops extension",
+    "description": "azure devops extension",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "author": "Anh Tuan",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "instanceNameFormat": "Echo $(version)", 
+    "inputs": [
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Sample String",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "A sample string"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "index.js"
+        }
+    }
+}
