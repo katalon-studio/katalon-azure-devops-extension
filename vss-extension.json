@@ -1,15 +1,15 @@
 {
     "manifestVersion": 1,
-    "id": "azure-devops-extension",
-    "name": "Azure Devops Extension",
+    "id": "katalon-devops-extension",
+    "name": "Katalon Extension",
     "version": "0.0.15",
-    "publisher": "AnhTuan",
+    "publisher": "azure-devops-extension",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
         }
     ],    
-    "description": "Azure Devops Extension",
+    "description": "Katalon Devops Extension",
     "categories": [
         "Azure Pipelines"
     ],
@@ -18,18 +18,18 @@
     },
     "files": [
         {
-            "path": "azureDevopsExtension"
+            "path": "katalonTask"
         }
     ],
     "contributions": [
         {
-            "id": "azure-devops-extension",
+            "id": "katalon-devops-extension",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "azureDevopsExtension"
+                "name": "katalonTask"
             }
         }
     ]

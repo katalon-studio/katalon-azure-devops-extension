@@ -1,0 +1,57 @@
+{
+    "id": "3e2e9ca7-557e-4ea9-bb6e-4f271abe0a94",
+    "name": "katalon-task",
+    "friendlyName": "Katalon task",
+    "description": "Katalon task",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "author": "Katalon",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "instanceNameFormat": "Katalon Execution Task", 
+    "inputs": [
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Download Katalon Version",
+            "defaultValue": "",
+            "helpMarkDown": "Version"
+        },
+        {
+            "name": "location",
+            "type": "string",
+            "label": "Use pre-installed Katalon Studio",
+            "defaultValue": "",
+            "helpMarkDown": "Version"
+        },
+        {
+            "name": "executeArgs",
+            "type": "string",
+            "label": "Command arguments",
+            "defaultValue": "",
+            "helpMarkDown": "Version"
+        },
+        {
+            "name": "x11Display",
+            "type": "string",
+            "label": "X11 DISPLAY (for Linux)",
+            "defaultValue": "",
+            "helpMarkDown": "Version"
+        },
+        {
+            "name": "xvfbConfiguration",
+            "type": "string",
+            "label": "Xvfb-run configuration",
+            "defaultValue": "",
+            "helpMarkDown": "Version"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "index.js"
+        }
+    }
+}
