@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "katalon-devops-extension",
     "name": "Katalon Extension",
-    "version": "0.0.16",
+    "version": "0.0.19",
     "publisher": "azure-devops-extension",
     "targets": [
         {
@@ -20,6 +20,7 @@
         {
             "path": "katalonTask"
         }
+        
     ],
     "contributions": [
         {
