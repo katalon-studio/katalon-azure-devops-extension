@@ -1,7 +1,7 @@
 # Azure Devops Extension
 
 
-## How to package extension:
+## How to create package extension:
 
 ```bash
 tfx extension create --manifest-globs vss-extension.json
