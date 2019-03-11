@@ -40,6 +40,8 @@ const https = require('https');
 const fs = require('fs');
 const os = require('os');
 
+var download = require("./DownloadTask");
+
 const releases = "https://raw.githubusercontent.com/katalon-studio/katalon-studio/master/releases.json";
 
 var version, location, executeArgs, x11Display, xvfbConfiguration;

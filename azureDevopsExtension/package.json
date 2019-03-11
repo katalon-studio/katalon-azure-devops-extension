@@ -11,8 +11,12 @@
   "dependencies": {
     "azure-pipelines-task-lib": "^2.7.7",
     "curlrequest": "^1.0.1",
+    "express": "^4.16.4",
     "http": "0.0.0",
     "https": "^1.0.0",
+    "mkdirp": "^0.5.1",
+    "request": "^2.88.0",
+    "unzip": "^0.1.11",
     "user-home": "^2.0.0"
   },
   "devDependencies": {
