@@ -1,5 +1,7 @@
 import tl = require('azure-pipelines-task-lib/task');
 // import getKatalon = require("ge");
+// import getKatalon = require("./DownloadTask");
+
 var version : string,
     location: string,
     executeArgs: string,

@@ -17,6 +17,7 @@ const version = "5.10.1";
 console.log(workerDir);
 
 if (!fs.existsSync(workerDir)){
+    // @ts-ignore
     mkdirp(workerDir);
 }
 
@@ -25,6 +26,7 @@ const destDir = path.join(workerDir, version);
 const dirFileZip = path.join(destDir, name);
 
 if (!fs.existsSync(destDir)){
+    // @ts-ignore
     mkdirp(destDir);
 }
 console.log("Get forder to save katalon done");
