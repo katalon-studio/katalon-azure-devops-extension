@@ -36,51 +36,105 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var tl = require("azure-pipelines-task-lib/task");
-const getKatalon = require("./getKatalonFromGit");
+const https = require('https');
+const fs = require('fs');
+const os = require('os');
+
+const releases = "https://raw.githubusercontent.com/katalon-studio/katalon-studio/master/releases.json";
 
 var version, location, executeArgs, x11Display, xvfbConfiguration;
-function run() {
+
+var osCurrent = os.platform();
+if (osCurrent == "win32"){
+    if (os.arch() == "x64"){
+        osCurrent = "win64";
+    }
+}
+
+switch(osCurrent){
+    case "win32":
+        osCurrent = "Windows 32";
+        break;
+    case "win64":
+        osCurrent = "Windows 64";
+        break;
+    case "mac":
+        osCurrent = "masOS";
+        break;
+    case "linux":
+        osCurrent = "Linux";
+        break;
+}
+
+console.log(osCurrent);
+
+function getObjectKatalon(callback) {
+    https.get(releases, function(response) {
+            var body = '';
+            console.log("Call here");
+            response.on('data', function(d){
+                body += d;
+            });
+
+            response.on('end', function(){
+                var parsed = JSON.parse(body);
+                for (var i in parsed){
+                    if(parsed[i].version == version){
+                        if (parsed[i].os == osCurrent){
+                            var objectKatalon = parsed[i];
+                            
+                            return callback(objectKatalon);
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+function run(callback) {
     return __awaiter(this, void 0, void 0, function () {
-        var version_1, location_1, executeArgs_1, x11Display_1, xvfbConfiguration_1, userHome;
+        // var version_1, location_1, executeArgs_1, x11Display_1, xvfbConfiguration_1, userHome;
         return __generator(this, function (_a) {
             try {
-                version_1 = tl.getInput('version', true);
-                if (version_1 == 'version') {
+                version = tl.getInput('version', true);
+                // version = "5.10.1";
+                if (version == 'version') {
                     console.log("Version not found");
                 }
                 else {
-                    console.log("version: ", version_1);
+                    console.log("version: ", version);
+                    getObjectKatalon(function(objectKatalon){
+                        console.log(objectKatalon.url);
+                    })
                 }
-                location_1 = tl.getInput("location", true);
-                if (location_1 == 'location') {
+                location = tl.getInput("location", true);
+                if (location == 'location') {
                     console.log("location not found");
                 }
                 else {
-                    console.log("location: ", location_1);
+                    console.log("location: ", location);
                 }
-                executeArgs_1 = tl.getInput('executeArgs', true);
-                if (executeArgs_1 == 'executeArgs') {
+                executeArgs = tl.getInput('executeArgs', true);
+                if (executeArgs == 'executeArgs') {
                     console.log('execute not found');
                 }
                 else {
-                    console.log('execute: ', executeArgs_1);
+                    console.log('execute: ', executeArgs);
                 }
-                x11Display_1 = tl.getInput('x11Display', true);
-                if (x11Display_1 == 'x11Display') {
+                x11Display = tl.getInput('x11Display', true);
+                if (x11Display == 'x11Display') {
                     console.log('x11 not found');
                 }
                 else {
-                    console.log('x11 display:', x11Display_1);
+                    console.log('x11 display:', x11Display);
                 }
-                xvfbConfiguration_1 = tl.getInput('xvfbConfiguration', true);
-                if (xvfbConfiguration_1 == 'xvfbConfiguration') {
+                xvfbConfiguration = tl.getInput('xvfbConfiguration', true);
+                if (xvfbConfiguration == 'xvfbConfiguration') {
                     console.log('xvfbConfiguration not found');
                 }
                 else {
-                    console.log('xvfbConfiguration: ', xvfbConfiguration_1);
+                    console.log('xvfbConfiguration: ', xvfbConfiguration);
                 }
-                userHome = require('user-home');
-                console.log(userHome);
             }
             catch (err) {
                 tl.setResult(tl.TaskResult.Failed, err.message);
@@ -89,4 +143,9 @@ function run() {
         });
     });
 }
-run();
+
+
+
+run(function(callback){
+
+});

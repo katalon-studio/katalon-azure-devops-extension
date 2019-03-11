@@ -12,6 +12,7 @@
     "azure-pipelines-task-lib": "^2.7.7",
     "curlrequest": "^1.0.1",
     "http": "0.0.0",
+    "https": "^1.0.0",
     "user-home": "^2.0.0"
   },
   "devDependencies": {
