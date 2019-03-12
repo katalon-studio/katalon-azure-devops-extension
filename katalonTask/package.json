@@ -1,5 +1,5 @@
 {
-  "name": "azure-devops-extension",
+  "name": "katalon-devops-extension",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,9 +12,12 @@
     "azure-pipelines-task-lib": "^2.7.7",
     "curlrequest": "^1.0.1",
     "express": "^4.16.4",
+    "fs": "0.0.1-security",
     "http": "0.0.0",
     "https": "^1.0.0",
     "mkdirp": "^0.5.1",
+    "os": "^0.1.1",
+    "path": "^0.12.7",
     "q": "^1.5.1",
     "request": "^2.88.0",
     "unzip": "^0.1.11",
@@ -22,7 +25,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^5.2.6",
-    "@types/node": "^11.10.5",
+    "@types/node": "^11.11.1",
     "@types/q": "^1.5.1"
   }
 }

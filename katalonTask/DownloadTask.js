@@ -1,18 +1,22 @@
-// @ts-nocheck
 const fs = require('fs');
 const unzip = require('unzip');
 const mkdirp = require('mkdirp');
 const path = require('path');
 const homedir = require('os').homedir();
 const request = require('request');
+var release = require('./KatalonRelease');
 
 // const url = "https://github.com/katalon-studio/katalon-studio/releases/download/v5.10.1/Katalon_Studio_Windows_32-5.10.1.zip";
 // const name = "Katalon_Studio_Windows_32-5.10.1.zip";
-// const folder = "Katalon_Studio_Windows_32-5.10.1";
-// const version = "5.10.1";
+const version = "5.10.1";
 
-function DownloadAndExtract(version, url, name, callback) {
-    var workerDir = path.join(homedir, '.katalon');
+function DownloadAndExtract(version, callback) {
+    release.getObjectKatalon(version, function(katalon) {
+        var url = katalon.url;
+        var name = katalon.filename;
+        console.log(katalon);
+
+        var workerDir = path.join(homedir, '.katalon');
 
         if (!fs.existsSync(workerDir)) {
             mkdirp(workerDir);
@@ -46,6 +50,8 @@ function DownloadAndExtract(version, url, name, callback) {
              });
             }
             return katalonFolder;    
+    })  
+    
     }
 
 function getName(name) {
@@ -53,5 +59,7 @@ function getName(name) {
     return name.substring(0, indexOf);
 }
 
-// var dir = DownloadAndExtract(version, url, name);
+module.exports.DownloadAndExtract = DownloadAndExtract;
+
+var dir = DownloadAndExtract(version);
 // console.log(dir);

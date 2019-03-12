@@ -3,7 +3,6 @@ const os = require('os');
 
 const releases = "https://raw.githubusercontent.com/katalon-studio/katalon-studio/master/releases.json";
 
-// @ts-ignore
 function getOS() {
     var osCurrent = os.platform().toString();
 
@@ -30,9 +29,11 @@ function getOS() {
     return osCurrent;
 };
 
-// @ts-ignore
 function getObjectKatalon(version, callback) {
     var osCurrent = getOS();
+
+    // console.log(version);
+
     http.get(releases, function(response) {
             var body = '';
 
@@ -45,10 +46,9 @@ function getObjectKatalon(version, callback) {
 
                 for (var i in parsed){
                     if (parsed[i].version == version) {
-                        // @ts-ignore
                         if (parsed[i].os == osCurrent) {
                             var objectKatalon = parsed[i];
-                            console.log(objectKatalon.url);
+                            // console.log(objectKatalon.url);
                             return callback(objectKatalon);
                         }
                     }
@@ -57,7 +57,8 @@ function getObjectKatalon(version, callback) {
         });
     }
 
-// @ts-ignore
-getObjectKatalon("5.10.1", function(a) {
-    console.log(a.url);
-});
+module.exports.getObjectKatalon = getObjectKatalon;
+
+// getObjectKatalon("5.10.1", function(a) {
+//     console.log(a.url);
+// });

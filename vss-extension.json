@@ -2,8 +2,8 @@
     "manifestVersion": 1,
     "id": "katalon-devops-extension",
     "name": "Katalon Extension",
-    "version": "0.0.19",
-    "publisher": "azure-devops-extension",
+    "version": "0.0.13",
+    "publisher": "AnhTuan",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"

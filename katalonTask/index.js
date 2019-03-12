@@ -35,63 +35,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var tl = require("azure-pipelines-task-lib/task");
-const https = require('https');
-const fs = require('fs');
-const os = require('os');
-
-var download = require("./DownloadTask");
-
-const releases = "https://raw.githubusercontent.com/katalon-studio/katalon-studio/master/releases.json";
+const tl = require("azure-pipelines-task-lib/task");
+const Download = require("./DownloadTask");
 
 var version, location, executeArgs, x11Display, xvfbConfiguration;
-
-var osCurrent = os.platform();
-if (osCurrent == "win32"){
-    if (os.arch() == "x64"){
-        osCurrent = "win64";
-    }
-}
-
-switch(osCurrent){
-    case "win32":
-        osCurrent = "Windows 32";
-        break;
-    case "win64":
-        osCurrent = "Windows 64";
-        break;
-    case "mac":
-        osCurrent = "masOS";
-        break;
-    case "linux":
-        osCurrent = "Linux";
-        break;
-}
-
-console.log(osCurrent);
-
-function getObjectKatalon(callback) {
-    https.get(releases, function(response) {
-            var body = '';
-            console.log("Call here");
-            response.on('data', function(d){
-                body += d;
-            });
-
-            response.on('end', function(){
-                var parsed = JSON.parse(body);
-                for (var i in parsed){
-                    if(parsed[i].version == version){
-                        if (parsed[i].os == osCurrent){
-                            var objectKatalon = parsed[i];
-                            
-                            return callback(objectKatalon);
-                        }
-                    }
-                }
-            });
-        });
-    }
 
 function run(callback) {
     return __awaiter(this, void 0, void 0, function () {
@@ -99,15 +46,11 @@ function run(callback) {
         return __generator(this, function (_a) {
             try {
                 version = tl.getInput('version', true);
-                // version = "5.10.1";
                 if (version == 'version') {
                     console.log("Version not found");
                 }
                 else {
                     console.log("version: ", version);
-                    getObjectKatalon(function(objectKatalon){
-                        console.log(objectKatalon.url);
-                    })
                 }
                 location = tl.getInput("location", true);
                 if (location == 'location') {
@@ -146,8 +89,9 @@ function run(callback) {
     });
 }
 
-
-
-run(function(callback){
-
+run(function(a) {
+    console.log(version);
+    Download.DownloadAndExtract(version, function(dest) {
+        console.log(dest);
+    })
 });

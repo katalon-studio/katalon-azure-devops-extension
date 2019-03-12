@@ -1,2 +1,3 @@
-/azureDevopsExtension/node_modules 
+/katalonTask/node_modules
 node_modules
+.vscode
