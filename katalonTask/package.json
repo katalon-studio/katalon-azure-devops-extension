@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "azure-pipelines-task-lib": "^2.7.7",
+    "bluebird": "^3.5.3",
     "curlrequest": "^1.0.1",
     "decompress": "^4.2.0",
     "express": "^4.16.4",
@@ -17,6 +18,7 @@
     "http": "0.0.0",
     "https": "^1.0.0",
     "mkdirp": "^0.5.1",
+    "node-cmd": "^3.0.0",
     "os": "^0.1.1",
     "path": "^0.12.7",
     "q": "^1.5.1",

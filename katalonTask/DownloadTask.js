@@ -34,8 +34,11 @@ function DownloadAndExtract(version, callback) {
         
         var fileDone = path.join(katalonFolder, ".done");
         if (fs.existsSync(fileDone)) {
-            console.log(fs.readFileSync(fileDone, 'utf8'));
+            console.log("Katalon Studio package has been downloaded already.");
+            // console.log(fs.readFileSync(fileDone, 'utf8'));
         } else {
+            console.log("Downloading Katalon Studio from " + version + ". It may take a few seconds.")
+
             request(url).pipe(fs.createWriteStream(fileZipDir)).on('finish', function () { 
                 decompress(fileZipDir, versionDir).then(files => {
                     fs.unlink(fileZipDir, (err) => {

@@ -1,32 +1,62 @@
-const nodeCmd = require('node-cmd');
+const child = require('child_process');
+const os = require('os');
+const homedir = os.homedir();
 
+function getOS() {
+  var osCurrent = os.platform().toString();
 
-const des = "C:\\Users\\tuananhtran\\.katalon\\5.10.1\\Katalon_Studio_Windows_32-5.10.1"
-const execute = "katalon -noSplash  -runMode=console -consoleLog -projectPath=\"C:\\Users\\tuananhtran\\Katalon Studio\\Test.prj\\Jira API Tests with Katalon Studio.prj\" -retry=0 -testSuitePath=\"Test Suites/Data-driven tests\" -executionProfile=\"default\" -browserType=\"Web Service\"";
+  if (osCurrent == "win32"){
+      if (os.arch() == "x64"){
+          osCurrent = "win64";
+      }
+  }
+  
+  switch(osCurrent){
+      case "win32":
+          osCurrent = "Windows 32";
+          break;
+      case "win64":
+          osCurrent = "Windows 64";
+          break;
+      case "mac":
+          osCurrent = "masOS";
+          break;
+      case "linux":
+          osCurrent = "Linux";
+          break;
+  }    
+  return osCurrent;
+};
 
-// console.log(des);
+function getKatalonDir(version) {
+  var workerDir = path.join(homedir, '.katalon');
 
-// nodeCmd.get('cd ' + des, (err, data, stderr) => console.log(data));
-// nodeCmd.get("dir", (err, data, stderr) => console.log(data));
+  var versionDir = path.join(workerDir, version);
+  
+  return path.join(versionDir, "katalon.exe");
+}
 
-// // nodeCmd.get(execute, (err, data, stderr) => console.log(data));
+function runCommand(command, x11Display, xvfbConfiguration) {
+  version = "////";
 
-// const util = require('util');
-// const exec = util.promisify(require('child_process').exec);
+  if (getOS().indexOf("Windows") < 0) {
+    if(!x11Display.trim()) {
+      command = "DISPLAY=" + x11Display + " " + command;
+    }
+    if(!xvfbConfiguration.trim()) {
+      command = "xvfb-run " + xvfbConfiguration + " " + command;
+    }
+  }
+  exe = getKatalonDir(version) + " " + command;
 
-// async function ls() {
-// //   const { stdout, stderr } = await exec('cd /d' + des);
-//     const {stdout, stderr} = await exec('pushd ' + des);
-//   const { stdoutt, stderrr } = await exec('dir');
-// }
-// ls();
-
-var exec = require('child_process').exec;
-var cmd = 'pushd ' + des;
-
-exec(cmd, function(error, stdout, stderr) {
-  // command output is in stdout
-  exec('dir', function(error, stdout, stderr) { //ls
-      console.log(stdout);
+  child.exec(command, {
+    cwd: des
+  }, function(error, stdout, stderr) {
+    console.log("Run test case katalon done!");
   });
-});
+}
+
+module.exports.runCommand = runCommand;
+
+// const des = "C:\\Users\\tuananhtran\\.katalon\\5.10.1\\Katalon_Studio_Windows_32-5.10.1"
+// const execute = "katalon -noSplash  -runMode=console -consoleLog -projectPath=\"C:\\Users\\tuananhtran\\Katalon Studio\\Test.prj\\Jira API Tests with Katalon Studio.prj\" -retry=0 -testSuitePath=\"Test Suites/Data-driven tests\" -executionProfile=\"default\" -browserType=\"Web Service\"";
