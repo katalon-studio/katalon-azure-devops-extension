@@ -34,13 +34,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+
 Object.defineProperty(exports, "__esModule", { value: true });
 const tl = require("azure-pipelines-task-lib/task");
 const Download = require("./DownloadTask");
 
 var version, location, executeArgs, x11Display, xvfbConfiguration;
 
-function run(callback) {
+function run() {
     return __awaiter(this, void 0, void 0, function () {
         // var version_1, location_1, executeArgs_1, x11Display_1, xvfbConfiguration_1, userHome;
         return __generator(this, function (_a) {
@@ -80,6 +81,9 @@ function run(callback) {
                 else {
                     console.log('xvfbConfiguration: ', xvfbConfiguration);
                 }
+                Download.DownloadAndExtract(version, function(dest) {
+                    console.log(dest);
+                });
             }
             catch (err) {
                 tl.setResult(tl.TaskResult.Failed, err.message);
@@ -89,9 +93,4 @@ function run(callback) {
     });
 }
 
-run(function(a) {
-    console.log(version);
-    Download.DownloadAndExtract(version, function(dest) {
-        console.log(dest);
-    })
-});
+run();

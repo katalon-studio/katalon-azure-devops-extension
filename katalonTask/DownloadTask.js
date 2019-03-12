@@ -1,5 +1,6 @@
 const fs = require('fs');
-const unzip = require('unzip');
+// const unzip = require('unzip');
+const decompress = require('decompress');
 const mkdirp = require('mkdirp');
 const path = require('path');
 const homedir = require('os').homedir();
@@ -36,30 +37,35 @@ function DownloadAndExtract(version, callback) {
             console.log(fs.readFileSync(fileDone, 'utf8'));
         } else {
             request(url).pipe(fs.createWriteStream(fileZipDir)).on('finish', function () { 
-                fs.createReadStream(fileZipDir).pipe(unzip.Extract({path: versionDir})).on('finish', () => {
+                decompress(fileZipDir, versionDir).then(files => {
                     fs.unlink(fileZipDir, (err) => {
                         if (err) throw err;
                         console.log("Deleted zip done");
                     })
                     fs.writeFile(path.join(katalonFolder, ".done"), "Download done at " + new Date(), (err) => {
                         if (err) throw err;
-                        console.log("Done");
+                        console.log(katalonFolder);
                     });
-                    
                 });
              });
             }
-            return katalonFolder;    
+        return katalonFolder;    
     })  
-    
-    }
+}
 
 function getName(name) {
+    if ((indexOf = name.lastIndexOf(".zip")) > 0) {
+        return name.substring(0, indexOf);
+    } else if ((indexOf = name.lastIndexOf(".tar.gz")) > 0) {
+        return name.substring(0, indexOf);
+    } else if ((indexOf = name.lastIndexOf(".dmg")) > 0) {
+        return name.substring(0, indexOf);
+    }
     var indexOf = name.lastIndexOf(".");
     return name.substring(0, indexOf);
 }
 
 module.exports.DownloadAndExtract = DownloadAndExtract;
 
-var dir = DownloadAndExtract(version);
+// var dir = DownloadAndExtract(version);
 // console.log(dir);
