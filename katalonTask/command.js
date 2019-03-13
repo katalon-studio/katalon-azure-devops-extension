@@ -55,16 +55,6 @@ function runCommand(katalonFolder, version, location, projectPath, executeArgs, 
 
   var osVersion = getOS();
   var command = "";
-
-  if (osVersion.indexOf("Windows") < 0) {
-    if(!x11Display) {
-      command = "DISPLAY=" + x11Display + " " + command;
-    }
-    if(!xvfbConfiguration) {
-      command = "xvfb-run " + xvfbConfiguration + " " + command;
-    }
-  }
-
   var katalonExecutableFile = "";
 
   if (osVersion.indexOf("masOS") >= 0) {
@@ -73,12 +63,24 @@ function runCommand(katalonFolder, version, location, projectPath, executeArgs, 
     katalonExecutableFile = path.join(katalonDirPath, "katalon");
   }
 
-  command = katalonExecutableFile + " -noSplash " + " -runMode=console ";
+  if (osVersion.indexOf("Windows") < 0) {
+    command = "sh -c " + katalonExecutableFile;
+    if(x11Display) {
+      command += " DISPLAY=" + x11Display;
+    }
+    if(xvfbConfiguration) {
+      command += " xvfb-run " + xvfbConfiguration;
+    }
+  } else {
+    command = "cmd /c " + katalonExecutableFile;
+  }
+
+  command += " -noSplash " + " -runMode=console ";
 
   command += executeArgs;
   
   if (command.indexOf("-projectPath") < 0) {
-    command = command + " -projectPath=\"" + projectPath + "\" ";
+    command += " -projectPath=\"" + projectPath + "\" ";
   }
 
   workingDirectory = path.join(homeDirectory, "katalon-");
@@ -89,7 +91,8 @@ function runCommand(katalonFolder, version, location, projectPath, executeArgs, 
   console.log("Execute " + command + " in " + workingDirectory);
 
   child.exec(command, {
-    cwd: workingDirectory
+    cwd: workingDirectory,
+    shell: true
   }, function(error, stdout, stderr) {
     if (error) throw error;
     console.log(stdout);
@@ -100,13 +103,13 @@ function runCommand(katalonFolder, version, location, projectPath, executeArgs, 
 
 module.exports.runCommand = runCommand;
 
-// var katalonFolder = "C:\\Users\\tuananhtran\\.katalon\\5.10.1\\Katalon_Studio_Windows_64-5.10.1";
-// var version = "5.10.1";
-// var location = "";
-// var projectPath = "D:\\Katalon\\demo-azure\\CI-sample";
-// var executeArgs = "-retry=0 -testSuitePath=\"Test Suites/TS_RegressionTest\" -executionProfile=\"default\" -browserType=\"Chrome\"";
-// var x11Display = "";
-// var xvfbConfiguration = "";
+var katalonFolder = "C:\\Users\\tuananhtran\\.katalon\\5.10.1\\Katalon_Studio_Windows_64-5.10.1";
+var version = "5.10.1";
+var location = "";
+var projectPath = "D:\\Katalon\\demo-azure\\CI-sample";
+var executeArgs = "-retry=0 -testSuitePath=\"Test Suites/TS_RegressionTest\" -executionProfile=\"default\" -browserType=\"Chrome\"";
+var x11Display = "";
+var xvfbConfiguration = "";
 
 
-// runCommand(katalonFolder, version, location, projectPath, executeArgs, x11Display, xvfbConfiguration);
+runCommand(katalonFolder, version, location, projectPath, executeArgs, x11Display, xvfbConfiguration);
