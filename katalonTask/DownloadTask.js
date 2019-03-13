@@ -12,7 +12,7 @@ const child = require('child_process');
 
 // const url = "https://github.com/katalon-studio/katalon-studio/releases/download/v5.10.1/Katalon_Studio_Windows_32-5.10.1.zip";
 // const name = "Katalon_Studio_Windows_32-5.10.1.zip";
-const version = "5.10.1";
+// const version = "5.10.1";
 
 function DownloadAndExtract(version, location, projectPath, executeArgs, x11Display, xvfbConfiguration, callback) {
     release.getObjectKatalon(version, function(katalon) {
