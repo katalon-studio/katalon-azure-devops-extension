@@ -1,6 +1,11 @@
 const child = require('child_process');
 const os = require('os');
+const path = require('path');
+const mkdirp = require('mkdirp');
+const fs = require('fs');
+
 const homedir = os.homedir();
+
 
 function getOS() {
   var osCurrent = os.platform().toString();
@@ -33,30 +38,75 @@ function getKatalonDir(version) {
 
   var versionDir = path.join(workerDir, version);
   
-  return path.join(versionDir, "katalon.exe");
+  return versionDir;
 }
 
-function runCommand(command, x11Display, xvfbConfiguration) {
-  version = "////";
+function runCommand(katalonFolder, version, location, projectPath, executeArgs, x11Display, xvfbConfiguration) {
+  var homeDirectory = getKatalonDir(version);
 
-  if (getOS().indexOf("Windows") < 0) {
-    if(!x11Display.trim()) {
+  var katalonDirPath = "";
+  if (location == "") {
+    katalonDirPath = katalonFolder;
+  } else {
+    katalonDirPath = location;
+  }
+
+  console.log("Using Katalon Studio at " + katalonDirPath);
+
+  var osVersion = getOS();
+  var command = "";
+
+  if (osVersion.indexOf("Windows") < 0) {
+    if(x11Display != "") {
       command = "DISPLAY=" + x11Display + " " + command;
     }
-    if(!xvfbConfiguration.trim()) {
+    if(xvfbConfiguration.length != "") {
       command = "xvfb-run " + xvfbConfiguration + " " + command;
     }
   }
-  exe = getKatalonDir(version) + " " + command;
+
+  var katalonExecutableFile = "";
+
+  if (osVersion.indexOf("masOS") >= 0) {
+    katalonExecutableFile =  path.join(katalonDirPath, "Contents", "MacOS", "katalon");
+  } else {
+    katalonExecutableFile = path.join(katalonDirPath, "katalon");
+  }
+
+  command = katalonExecutableFile + " -noSplash " + " -runMode=console ";
+
+  command += executeArgs;
+  
+  if (command.indexOf("-projectPath") < 0) {
+    command = command + " -projectPath=\"" + projectPath + "\" ";
+  }
+
+  workingDirectory = path.join(homeDirectory, "katalon-");
+  if (!fs.existsSync(workingDirectory)) {
+    mkdirp(workingDirectory);
+  }
+
+  console.log("Execute " + command + " in " + workingDirectory);
 
   child.exec(command, {
-    cwd: des
+    cwd: workingDirectory
   }, function(error, stdout, stderr) {
-    console.log("Run test case katalon done!");
-  });
+    if (error) throw error;
+    console.log(stdout);
+    console.log("Run katalon done");
+    return true;
+  })
 }
 
 module.exports.runCommand = runCommand;
 
-// const des = "C:\\Users\\tuananhtran\\.katalon\\5.10.1\\Katalon_Studio_Windows_32-5.10.1"
-// const execute = "katalon -noSplash  -runMode=console -consoleLog -projectPath=\"C:\\Users\\tuananhtran\\Katalon Studio\\Test.prj\\Jira API Tests with Katalon Studio.prj\" -retry=0 -testSuitePath=\"Test Suites/Data-driven tests\" -executionProfile=\"default\" -browserType=\"Web Service\"";
+// var katalonFolder = "C:\\Users\\tuananhtran\\.katalon\\5.10.1\\Katalon_Studio_Windows_64-5.10.1";
+// var version = "5.10.1";
+// var location = "";
+// var projectPath = "D:\\Katalon\\demo-azure\\CI-sample";
+// var executeArgs = "-retry=0 -testSuitePath=\"Test Suites/TS_RegressionTest\" -executionProfile=\"default\" -browserType=\"Chrome\"";
+// var x11Display = "";
+// var xvfbConfiguration = "";
+
+
+// runCommand(katalonFolder, version, location, projectPath, executeArgs, x11Display, xvfbConfiguration);

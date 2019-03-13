@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "katalon-devops-extension",
     "name": "Katalon Extension",
-    "version": "0.0.17",
+    "version": "0.0.33",
     "publisher": "AnhTuan",
     "targets": [
         {

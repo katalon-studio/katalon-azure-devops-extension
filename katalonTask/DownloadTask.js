@@ -6,12 +6,15 @@ const path = require('path');
 const homedir = require('os').homedir();
 const request = require('request');
 var release = require('./KatalonRelease');
+var command = require('./Command');
+
+const child = require('child_process');
 
 // const url = "https://github.com/katalon-studio/katalon-studio/releases/download/v5.10.1/Katalon_Studio_Windows_32-5.10.1.zip";
 // const name = "Katalon_Studio_Windows_32-5.10.1.zip";
 const version = "5.10.1";
 
-function DownloadAndExtract(version, callback) {
+function DownloadAndExtract(version, location, projectPath, executeArgs, x11Display, xvfbConfiguration, callback) {
     release.getObjectKatalon(version, function(katalon) {
         var url = katalon.url;
         var name = katalon.filename;
@@ -35,16 +38,16 @@ function DownloadAndExtract(version, callback) {
         var fileDone = path.join(katalonFolder, ".done");
         if (fs.existsSync(fileDone)) {
             console.log("Katalon Studio package has been downloaded already.");
-            // console.log(fs.readFileSync(fileDone, 'utf8'));
         } else {
             console.log("Downloading Katalon Studio from " + version + ". It may take a few seconds.")
 
             request(url).pipe(fs.createWriteStream(fileZipDir)).on('finish', function () { 
                 decompress(fileZipDir, versionDir).then(files => {
+                    command.runCommand(katalonFolder, version, location, projectPath, executeArgs, x11Display, xvfbConfiguration);
+
                     fs.unlink(fileZipDir, (err) => {
                         if (err) throw err;
-                        console.log("Deleted zip done");
-                    })
+                    });
                     fs.writeFile(path.join(katalonFolder, ".done"), "Download done at " + new Date(), (err) => {
                         if (err) throw err;
                         console.log(katalonFolder);
@@ -52,7 +55,7 @@ function DownloadAndExtract(version, callback) {
                 });
              });
             }
-        return katalonFolder;    
+        return callback(katalonFolder);    
     })  
 }
 

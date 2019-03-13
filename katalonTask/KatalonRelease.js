@@ -32,8 +32,6 @@ function getOS() {
 function getObjectKatalon(version, callback) {
     var osCurrent = getOS();
 
-    // console.log(version);
-
     http.get(releases, function(response) {
             var body = '';
 
@@ -48,7 +46,6 @@ function getObjectKatalon(version, callback) {
                     if (parsed[i].version == version) {
                         if (parsed[i].os == osCurrent) {
                             var objectKatalon = parsed[i];
-                            // console.log(objectKatalon.url);
                             return callback(objectKatalon);
                         }
                     }
