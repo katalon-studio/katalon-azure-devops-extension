@@ -45,7 +45,7 @@ function runCommand(katalonFolder, version, location, projectPath, executeArgs, 
   var homeDirectory = getKatalonDir(version);
 
   var katalonDirPath = "";
-  if (location == "") {
+  if (!location) {
     katalonDirPath = katalonFolder;
   } else {
     katalonDirPath = location;
@@ -57,10 +57,10 @@ function runCommand(katalonFolder, version, location, projectPath, executeArgs, 
   var command = "";
 
   if (osVersion.indexOf("Windows") < 0) {
-    if(x11Display != "") {
+    if(!x11Display) {
       command = "DISPLAY=" + x11Display + " " + command;
     }
-    if(xvfbConfiguration.length != "") {
+    if(!xvfbConfiguration) {
       command = "xvfb-run " + xvfbConfiguration + " " + command;
     }
   }
