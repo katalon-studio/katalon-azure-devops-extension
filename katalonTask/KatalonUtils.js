@@ -6,15 +6,11 @@ const path = require('path');
 const homedir = require('os').homedir();
 const request = require('request');
 var release = require('./KatalonRelease');
-var command = require('./Command');
+var OsUtils = require('./OsUtils');
 
 const child = require('child_process');
 
-// const url = "https://github.com/katalon-studio/katalon-studio/releases/download/v5.10.1/Katalon_Studio_Windows_32-5.10.1.zip";
-// const name = "Katalon_Studio_Windows_32-5.10.1.zip";
-// const version = "5.10.1";
-
-function DownloadAndExtract(version, location, projectPath, executeArgs, x11Display, xvfbConfiguration, callback) {
+function ExecuteKatalon(version, location, projectPath, executeArgs, x11Display, xvfbConfiguration, callback) {
     release.getObjectKatalon(version, function(katalon) {
         var url = katalon.url;
         var name = katalon.filename;
@@ -43,7 +39,7 @@ function DownloadAndExtract(version, location, projectPath, executeArgs, x11Disp
 
             request(url).pipe(fs.createWriteStream(fileZipDir)).on('finish', function () { 
                 decompress(fileZipDir, versionDir).then(files => {
-                    command.runCommand(katalonFolder, version, location, projectPath, executeArgs, x11Display, xvfbConfiguration);
+                    OsUtils.runCommand(katalonFolder, version, location, projectPath, executeArgs, x11Display, xvfbConfiguration);
 
                     fs.unlink(fileZipDir, (err) => {
                         if (err) throw err;
@@ -71,7 +67,4 @@ function getName(name) {
     return name.substring(0, indexOf);
 }
 
-module.exports.DownloadAndExtract = DownloadAndExtract;
-
-// var dir = DownloadAndExtract(version);
-// console.log(dir);
+module.exports.ExecuteKatalon = ExecuteKatalon;

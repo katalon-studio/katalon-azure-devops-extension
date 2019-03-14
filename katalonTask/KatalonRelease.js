@@ -55,7 +55,3 @@ function getObjectKatalon(version, callback) {
     }
 
 module.exports.getObjectKatalon = getObjectKatalon;
-
-// getObjectKatalon("5.10.1", function(a) {
-//     console.log(a.url);
-// });

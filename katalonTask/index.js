@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const tl = require("azure-pipelines-task-lib/task");
-const Download = require("./DownloadTask");
+const KatalonUtils = require("./KatalonUtils");
 const child = require('child_process');
 const path = require('path');
 var version, location, executeArgs, x11Display, xvfbConfiguration, reportDirectory;
@@ -65,7 +65,7 @@ function run() {
                 
                 var projectPath = path.join(tl.cwd(), "test.prj");
 
-                Download.DownloadAndExtract(version, location, projectPath, executeArgs, x11Display, xvfbConfiguration, function(dest) {
+                KatalonUtils.ExecuteKatalon(version, location, projectPath, executeArgs, x11Display, xvfbConfiguration, function(dest) {
                     console.log(dest);
                 });
             }

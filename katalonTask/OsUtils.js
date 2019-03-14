@@ -102,14 +102,3 @@ function runCommand(katalonFolder, version, location, projectPath, executeArgs, 
 }
 
 module.exports.runCommand = runCommand;
-
-var katalonFolder = "C:\\Users\\tuananhtran\\.katalon\\5.10.1\\Katalon_Studio_Windows_64-5.10.1";
-var version = "5.10.1";
-var location = "";
-var projectPath = "D:\\Katalon\\demo-azure\\CI-sample";
-var executeArgs = "-retry=0 -testSuitePath=\"Test Suites/TS_RegressionTest\" -executionProfile=\"default\" -browserType=\"Chrome\"";
-var x11Display = "";
-var xvfbConfiguration = "";
-
-
-runCommand(katalonFolder, version, location, projectPath, executeArgs, x11Display, xvfbConfiguration);
