@@ -40,9 +40,7 @@ function getKatalonDir(version) {
   return versionDir;
 }
 
-function runCommand(katalonFolder, version, location, projectPath, executeArgs, x11Display, xvfbConfiguration) {
-  var homeDirectory = getKatalonDir(version);
-
+function runCommand(katalonFolder, location, projectPath, executeArgs, x11Display, xvfbConfiguration) {
   var katalonDirPath = "";
   if (!location) {
     katalonDirPath = katalonFolder;

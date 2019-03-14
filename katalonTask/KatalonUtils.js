@@ -36,7 +36,7 @@ function ExecuteKatalon(version, location, projectPath, executeArgs, x11Display,
 
             request(url).pipe(fs.createWriteStream(fileZipDir)).on('finish', () => { 
                 decompress(fileZipDir, versionDir).then(files => {
-                    OsUtils.runCommand(katalonFolder, version, location, projectPath, executeArgs, x11Display, xvfbConfiguration);
+                    OsUtils.runCommand(katalonFolder, location, projectPath, executeArgs, x11Display, xvfbConfiguration);
 
                     fs.unlink(fileZipDir, (err) => {
                         if (err) throw err;
