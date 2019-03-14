@@ -1,5 +1,4 @@
 const fs = require('fs');
-// const unzip = require('unzip');
 const decompress = require('decompress');
 const mkdirp = require('mkdirp');
 const path = require('path');
@@ -7,8 +6,6 @@ const homedir = require('os').homedir();
 const request = require('request');
 var release = require('./KatalonRelease');
 var OsUtils = require('./OsUtils');
-
-const child = require('child_process');
 
 function ExecuteKatalon(version, location, projectPath, executeArgs, x11Display, xvfbConfiguration, callback) {
     release.getObjectKatalon(version, function(katalon) {
@@ -37,7 +34,7 @@ function ExecuteKatalon(version, location, projectPath, executeArgs, x11Display,
         } else {
             console.log("Downloading Katalon Studio from " + version + ". It may take a few seconds.")
 
-            request(url).pipe(fs.createWriteStream(fileZipDir)).on('finish', function () { 
+            request(url).pipe(fs.createWriteStream(fileZipDir)).on('finish', () => { 
                 decompress(fileZipDir, versionDir).then(files => {
                     OsUtils.runCommand(katalonFolder, version, location, projectPath, executeArgs, x11Display, xvfbConfiguration);
 

@@ -1,8 +1,7 @@
 const child = require('child_process');
 const os = require('os');
 const path = require('path');
-const mkdirp = require('mkdirp');
-const fs = require('fs');
+const tmp = require('tmp');
 
 const homedir = os.homedir();
 
@@ -83,22 +82,22 @@ function runCommand(katalonFolder, version, location, projectPath, executeArgs, 
     command += " -projectPath=\"" + projectPath + "\" ";
   }
 
-  workingDirectory = path.join(homeDirectory, "katalon-");
-  if (!fs.existsSync(workingDirectory)) {
-    mkdirp(workingDirectory);
-  }
+  tmp.dir(function _tempDirCreated(err, workingDirectory, cleanupCallback) {
+    if (err) throw err;
 
-  console.log("Execute " + command + " in " + workingDirectory);
+    console.log("Execute " + command + " in " + workingDirectory);
 
-  child.exec(command, {
-    cwd: workingDirectory,
-    shell: true
-  }, function(error, stdout, stderr) {
-    if (error) throw error;
-    console.log(stdout);
-    console.log("Run katalon done");
-    return true;
-  })
+    child.exec(command, {
+      cwd: workingDirectory,
+      shell: true
+    }, function(error, stdout, stderr) {
+      if (error) throw error;
+      console.log(stdout);
+      
+      cleanupCallback();
+      return true;
+    })
+  });
 }
 
 module.exports.runCommand = runCommand;

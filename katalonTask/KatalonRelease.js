@@ -1,4 +1,4 @@
-const http = require('https');
+const https = require('https');
 const os = require('os');
 
 const releases = "https://raw.githubusercontent.com/katalon-studio/katalon-studio/master/releases.json";
@@ -32,14 +32,14 @@ function getOS() {
 function getObjectKatalon(version, callback) {
     var osCurrent = getOS();
 
-    http.get(releases, function(response) {
+    https.get(releases, (response) => {
             var body = '';
 
-            response.on('data', function(d) {
+            response.on('data', (d) => {
                 body += d;
             });
 
-            response.on('end', function() {
+            response.on('end', () => {
                 var parsed = JSON.parse(body);
 
                 for (var i in parsed){

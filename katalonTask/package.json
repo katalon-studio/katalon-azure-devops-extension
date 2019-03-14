@@ -23,7 +23,7 @@
     "path": "^0.12.7",
     "q": "^1.5.1",
     "request": "^2.88.0",
-    "unzip": "^0.1.11",
+    "tmp": "0.0.33",
     "user-home": "^2.0.0"
   },
   "devDependencies": {
