@@ -1,8 +1,8 @@
 {
     "manifestVersion": 1,
-    "id": "katalon-devops-extension",
-    "name": "Katalon Extension",
-    "version": "0.0.1",
+    "id": "katalon-devops-extension-plugin",
+    "name": "Katalon Extension Plugin",
+    "version": "0.0.21",
     "publisher": "AnhTuan",
     "targets": [
         {
@@ -24,7 +24,7 @@
     ],
     "contributions": [
         {
-            "id": "katalon-devops-extension",
+            "id": "katalon-devops-extension-plugin",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"

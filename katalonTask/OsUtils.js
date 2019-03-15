@@ -2,9 +2,7 @@ const child = require('child_process');
 const os = require('os');
 const path = require('path');
 const tmp = require('tmp');
-
-const homedir = os.homedir();
-
+const tl = require("azure-pipelines-task-lib/task");
 
 function getOS() {
   var osCurrent = os.platform().toString();
@@ -32,15 +30,7 @@ function getOS() {
   return osCurrent;
 };
 
-function getKatalonDir(version) {
-  var workerDir = path.join(homedir, '.katalon');
-
-  var versionDir = path.join(workerDir, version);
-  
-  return versionDir;
-}
-
-function runCommand(katalonFolder, location, projectPath, executeArgs, x11Display, xvfbConfiguration) {
+function runCommand(katalonFolder, location, executeArgs, x11Display, xvfbConfiguration) {
   var katalonDirPath = "";
   if (!location) {
     katalonDirPath = katalonFolder;
@@ -61,41 +51,51 @@ function runCommand(katalonFolder, location, projectPath, executeArgs, x11Displa
   }
 
   if (osVersion.indexOf("Windows") < 0) {
-    command = "sh -c " + katalonExecutableFile;
-    if(x11Display) {
-      command += " DISPLAY=" + x11Display;
-    }
-    if(xvfbConfiguration) {
-      command += " xvfb-run " + xvfbConfiguration;
-    }
-  } else {
-    command = "cmd /c " + katalonExecutableFile;
-  }
 
-  command += " -noSplash " + " -runMode=console ";
-
-  command += executeArgs;
-  
-  if (command.indexOf("-projectPath") < 0) {
-    command += " -projectPath=\"" + projectPath + "\" ";
-  }
-
-  tmp.dir(function _tempDirCreated(err, workingDirectory, cleanupCallback) {
-    if (err) throw err;
-
-    console.log("Execute " + command + " in " + workingDirectory);
-
-    child.exec(command, {
-      cwd: workingDirectory,
+    child.exec("chmod a+x katalon", {
+      cwd: katalonFolder,
       shell: true
     }, function(error, stdout, stderr) {
       if (error) throw error;
       console.log(stdout);
-      
-      cleanupCallback();
-      return true;
+    }) 
+
+    if(x11Display) {
+      command += " DISPLAY=" + x11Display;
+    }
+
+    if(xvfbConfiguration) {
+      command += "xvfb-run " + xvfbConfiguration;
+    }
+
+    command += " " + katalonExecutableFile;
+
+  } else {
+    
+    command = katalonExecutableFile;
+  }
+
+  command += " -noSplash " + " -runMode=console ";
+
+  if (command.indexOf("-projectPath") < 0) {
+    var projectPath = path.join(tl.cwd(), "test.prj");
+    command += " -projectPath=\"" + projectPath + "\" ";
+  }
+
+  command += executeArgs;
+
+  tmp.dir(function _tempDirCreated(err, workingDirectory, cleanupCallback) {
+    if (err) throw err;
+
+    console.log("Execute [" + command + "] in " + workingDirectory);
+    child.execFile('sh', ['-c', command], {
+      cwd: workingDirectory
+    }, function(error, stdout, stderr) {
+      console.log(stdout);
+      console.log(stderr);
+      if (error) throw error;
     })
-  });
+  })
 }
 
 module.exports.runCommand = runCommand;

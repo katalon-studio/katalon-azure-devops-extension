@@ -7,7 +7,7 @@ const request = require('request');
 var release = require('./KatalonRelease');
 var OsUtils = require('./OsUtils');
 
-function ExecuteKatalon(version, location, projectPath, executeArgs, x11Display, xvfbConfiguration, callback) {
+function ExecuteKatalon(version, location, executeArgs, x11Display, xvfbConfiguration, callback) {
     release.getObjectKatalon(version, function(katalon) {
         var url = katalon.url;
         var name = katalon.filename;
@@ -28,7 +28,7 @@ function ExecuteKatalon(version, location, projectPath, executeArgs, x11Display,
         var fileZipDir = path.join(versionDir, name);
         var katalonFolder = path.join(versionDir, getName(name));
         
-        var fileDone = path.join(katalonFolder, ".done");
+        var fileDone = path.join(katalonFolder, "katalon.done");
         if (fs.existsSync(fileDone)) {
             console.log("Katalon Studio package has been downloaded already.");
         } else {
@@ -36,12 +36,12 @@ function ExecuteKatalon(version, location, projectPath, executeArgs, x11Display,
 
             request(url).pipe(fs.createWriteStream(fileZipDir)).on('finish', () => { 
                 decompress(fileZipDir, versionDir).then(files => {
-                    OsUtils.runCommand(katalonFolder, location, projectPath, executeArgs, x11Display, xvfbConfiguration);
+                    OsUtils.runCommand(katalonFolder, location, executeArgs, x11Display, xvfbConfiguration);
 
                     fs.unlink(fileZipDir, (err) => {
                         if (err) throw err;
                     });
-                    fs.writeFile(path.join(katalonFolder, ".done"), "Download done at " + new Date(), (err) => {
+                    fs.writeFile(path.join(katalonFolder, "katalon.done"), "Download done at " + new Date(), (err) => {
                         if (err) throw err;
                         console.log(katalonFolder);
                     });
