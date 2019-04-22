@@ -25,28 +25,28 @@
             "type": "string",
             "label": "Use pre-installed Katalon Studio",
             "defaultValue": "",
-            "helpMarkDown": "Version"
+            "helpMarkDown": "Locaion in VMimage"
         },
         {
             "name": "executeArgs",
             "type": "string",
             "label": "Command arguments",
             "defaultValue": "",
-            "helpMarkDown": "Version"
+            "helpMarkDown": "Command to run Katalon"
         },
         {
             "name": "x11Display",
             "type": "string",
             "label": "X11 DISPLAY (for Linux)",
             "defaultValue": "",
-            "helpMarkDown": "Version"
+            "helpMarkDown": "X11 Display to run in Linux"
         },
         {
             "name": "xvfbConfiguration",
             "type": "string",
-            "label": "Xvfb-run configuration",
+            "label": "Xvfb-run configuration (for Linux)",
             "defaultValue": "",
-            "helpMarkDown": "Version"
+            "helpMarkDown": "Configuration to run in Linux"
         }
     ],
     "execution": {

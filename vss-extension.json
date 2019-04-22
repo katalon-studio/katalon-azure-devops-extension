@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "katalon-devops-extension-plugin",
     "name": "Katalon Extension Plugin",
-    "version": "0.0.21",
+    "version": "0.0.15",
     "publisher": "AnhTuan",
     "targets": [
         {

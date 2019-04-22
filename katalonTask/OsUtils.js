@@ -1,4 +1,4 @@
-const child = require('child_process');
+const childProcess = require('child_process');
 const os = require('os');
 const path = require('path');
 const tmp = require('tmp');
@@ -31,71 +31,103 @@ function getOS() {
 };
 
 function runCommand(katalonFolder, location, executeArgs, x11Display, xvfbConfiguration) {
-  var katalonDirPath = "";
+  let katalonDirPath = "";
   if (!location) {
     katalonDirPath = katalonFolder;
   } else {
     katalonDirPath = location;
   }
+  let cmd;
+  const args = [];
+  const type = os.type();
+  let shell;
+  let katalonExecutableFile;
+  let checkFolder; 
+  const locationCloneProject = tl.cwd();
+  executeArgs = `${executeArgs} -noSplash -runMode=console`;
 
-  console.log("Using Katalon Studio at " + katalonDirPath);
-
-  var osVersion = getOS();
-  var command = "";
-  var katalonExecutableFile = "";
-
-  if (osVersion.indexOf("masOS") >= 0) {
-    katalonExecutableFile =  path.join(katalonDirPath, "Contents", "MacOS", "katalon");
-  } else {
-    katalonExecutableFile = path.join(katalonDirPath, "katalon");
-  }
-
-  if (osVersion.indexOf("Windows") < 0) {
-
-    child.exec("chmod a+x katalon", {
-      cwd: katalonFolder,
-      shell: true
-    }, function(error, stdout, stderr) {
-      if (error) throw error;
-      console.log(stdout);
-    }) 
-
-    if(x11Display) {
-      command += " DISPLAY=" + x11Display;
-    }
-
-    if(xvfbConfiguration) {
-      command += "xvfb-run " + xvfbConfiguration;
-    }
-
-    command += " " + katalonExecutableFile;
-
-  } else {
-    
-    command = katalonExecutableFile;
-  }
-
-  command += " -noSplash " + " -runMode=console ";
-
-  if (command.indexOf("-projectPath") < 0) {
+  if (executeArgs.indexOf("-projectPath") < 0) {
     var projectPath = path.join(tl.cwd(), "test.prj");
-    command += " -projectPath=\"" + projectPath + "\" ";
-  }
+    executeArgs = `${executeArgs} -projectPath="${projectPath}"`;
+  } 
 
-  command += executeArgs;
+  if (type === 'Windows_NT') {
+    checkFolder = "dir";
+    katalonExecutableFile = path.join(katalonDirPath, "katalon");
+    cmd = 'cmd';
+    args.push('/c');
+    args.push(`${katalonExecutableFile}`)
+    args.push(`${executeArgs}`);
+    shell = true;
 
-  tmp.dir(function _tempDirCreated(err, workingDirectory, cleanupCallback) {
-    if (err) throw err;
-
-    console.log("Execute [" + command + "] in " + workingDirectory);
-    child.execFile('sh', ['-c', command], {
-      cwd: workingDirectory
+  } else {
+    checkFolder = 'ls -l'
+    childProcess.exec("chmod a+x katalon", {
+      cwd: katalonDirPath,
+      shell: true
     }, function(error, stdout, stderr) {
       console.log(stdout);
       console.log(stderr);
       if (error) throw error;
-    })
-  })
+    }) 
+
+    katalonExecutableFile = path.join(katalonDirPath, "katalon");
+
+    args.push('-c \'');
+    if (x11Display) {
+      args.push(`DISPLAY=${x11Display}`);
+    }
+    if (xvfbConfiguration) {
+      args.push(`xvfb-run ${xvfbConfiguration}`);
+    }
+
+    cmd = 'sh';
+    args.push(`${katalonExecutableFile}`)
+    args.push(`${executeArgs}\'`);
+    shell = true;
+  }
+
+  childProcess.exec(checkFolder, {
+    cwd: katalonDirPath,
+    shell: true
+  }, function(error, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    if (error) throw error;
+  }) 
+  
+  childProcess.exec(checkFolder, {
+    cwd: locationCloneProject,
+    shell: true
+  }, function(error, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    if (error) throw error;
+  }) 
+
+  const tmpDir = tmp.dirSync();
+  const tmpDirPath = tmpDir.name;
+  console.log(`Execute "${cmd} ${args.join(' ')}" in ${tmpDirPath}.`);
+
+  const promise = new Promise((resolve) => {
+    const cmdProcess = childProcess.spawn(cmd, args, {
+      cwd: tmpDirPath,
+      shell,
+    });
+    cmdProcess.stdout.on('data', (data) => {
+      console.log(data.toString());
+    });
+    cmdProcess.stderr.on('data', (data) => {
+      console.log(data.toString());
+    });
+    cmdProcess.on('close', (code) => {
+      console.log(`Exit code: ${code}.`);
+      resolve(code);
+    });
+  });
+  return promise;
+  
 }
+
 
 module.exports.runCommand = runCommand;

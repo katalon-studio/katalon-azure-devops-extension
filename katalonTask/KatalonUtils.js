@@ -32,7 +32,7 @@ function ExecuteKatalon(version, location, executeArgs, x11Display, xvfbConfigur
         if (fs.existsSync(fileDone)) {
             console.log("Katalon Studio package has been downloaded already.");
         } else {
-            console.log("Downloading Katalon Studio from " + version + ". It may take a few seconds.")
+            console.log("Downloading Katalon Studio version " + version + ". It may take a few seconds.")
 
             request(url).pipe(fs.createWriteStream(fileZipDir)).on('finish', () => { 
                 decompress(fileZipDir, versionDir).then(files => {
