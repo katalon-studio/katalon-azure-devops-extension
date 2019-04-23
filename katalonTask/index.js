@@ -1,9 +1,14 @@
 "use strict";
 
+global.appRoot = '.';
+
 const tl = require("azure-pipelines-task-lib/task");
-const child = require('child_process');
-const KatalonUtils = require("./KatalonUtils");
-var version, location, executeArgs, x11Display, xvfbConfiguration, reportDirectory;
+const path = require('path');
+const glob = require('glob');
+const ks = require('./build/agent/katalon-studio');
+const os = require('./build/agent/os');
+
+var version, location, executeArgs, x11Display, xvfbConfiguration, ksProjectPath;
 
 function run() {
     try {
@@ -22,14 +27,29 @@ function run() {
         xvfbConfiguration = tl.getInput('xvfbConfiguration', false);
         console.log('xvfbConfiguration: ', xvfbConfiguration);
 
-        KatalonUtils.ExecuteKatalon(version, location, executeArgs, x11Display, xvfbConfiguration, function(dest) {
-            console.log(dest);
-        });
+        const projectFilePattern = "**/*.prj";
+        const dirPath = tl.cwd();
+        const projectPathPattern = path.resolve(dirPath, projectFilePattern);
+        [ksProjectPath] = glob.sync(projectPathPattern, { nodir: true });
+
+        console.log(ksProjectPath);
+
+        // ks.execute(version, location, ksProjectPath, executeArgs,
+        //     x11Display, xvfbConfiguration)
+        //     .then(()=> {
+        //         tl.setResult(tl.TaskResult.Succeeded, "run katalon succes");
+        //     })
+        //     .catch((error) => {
+        //         tl.setResult(tl.TaskResult.Failed, error.message);
+        //         console.log(error);
+        //     })
+        os.runCommand('dir', '','');
     }
     catch (err) {
+        console.log(err);
         tl.setResult(tl.TaskResult.Failed, err.message);
     }
-    return [2 /*return*/];
 }
 
+console.log('def');
 run();
