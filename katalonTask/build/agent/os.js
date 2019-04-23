@@ -59,17 +59,13 @@ module.exports = {
     var args = [];
     var type = os.type();
     var shell;
-    var cmdTemp;
 
     if (type === 'Windows_NT') {
-      cmdTemp = 'dir';
       cmd = 'cmd';
       args.push('/c');
       args.push("\"".concat(command, "\""));
       shell = true;
     } else {
-      cmdTemp = 'ls -l';
-
       if (x11Display) {
         command = "DISPLAY=".concat(x11Display, " ").concat(command);
       }
@@ -93,13 +89,13 @@ module.exports = {
         shell: shell
       });
       cmdProcess.stdout.on('data', function (data) {
-        console.log(data.toString());
+        logger.debug(data.toString());
       });
       cmdProcess.stderr.on('data', function (data) {
-        console.log(data.toString());
+        logger.debug(data.toString());
       });
       cmdProcess.on('close', function (code) {
-        console.log("Exit code: ".concat(code, "."));
+        logger.info("Exit code: ".concat(code, "."));
         resolve(code);
       });
     });
