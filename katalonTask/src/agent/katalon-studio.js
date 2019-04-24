@@ -83,7 +83,7 @@ module.exports = {
         logger.info(`Katalon Folder: ${ksLocationParentDir}`);
         let ksExecutable = find(ksLocationParentDir, /katalon$|katalon\.exe$/);
         logger.info(`Katalon Executable File: ${ksExecutable}`);
-        fs.chmodSync(ksExecutable, '755');
+        // fs.chmodSync(ksExecutable, '755');
 
         if (ksExecutable.indexOf(' ') >= 0) {
           ksExecutable = `"${ksExecutable}"`;

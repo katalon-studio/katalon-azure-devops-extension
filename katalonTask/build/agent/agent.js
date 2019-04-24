@@ -53,7 +53,7 @@ var JOB_STATUS = Object.freeze({
 });
 
 function updateJob(token, jobOptions) {
-  return katalonRequest.updateJob(token, jobOptions).catch(function (err) {
+  return katalonRequest.updateJob(token, jobOptions)["catch"](function (err) {
     return logger.error("".concat(updateJob.name, ":"), err);
   });
 }
@@ -166,7 +166,7 @@ function executeJob(token, jobInfo, keepFiles) {
     return updateJob(token, jobOptions);
   }).then(function () {
     return uploadLog(token, jobInfo, logFilePath);
-  }).catch(function (err) {
+  })["catch"](function (err) {
     logger.error("".concat(executeJob.name, ":"), err); // Update job status to failed when exception occured
     // NOTE: Job status is set FAILED might not be because of a failed execution
     // but because of other reasons such as cannot remove tmp directory or cannot upload log
@@ -175,7 +175,7 @@ function executeJob(token, jobInfo, keepFiles) {
     var jobOptions = buildJobResponse(jobInfo, jobStatus);
     logger.debug("Error caught during job execution! Update job with status '".concat(jobStatus, "'"));
     return updateJob(token, jobOptions);
-  }).finally(function () {
+  })["finally"](function () {
     agentState.executingJob = false;
     jLogger.close(); // Remove temporary directory when `keepFiles` is false
 
@@ -258,7 +258,7 @@ var agent = {
           body: requestBody
         };
         logger.trace(requestBody);
-        katalonRequest.pingAgent(token, options).catch(function (err) {
+        katalonRequest.pingAgent(token, options)["catch"](function (err) {
           return logger.error(err);
         });
 
@@ -303,11 +303,11 @@ var agent = {
           agentState.executingJob = true; // eslint-disable-next-line consistent-return
 
           return executeJob(token, jobInfo, keepFiles);
-        }).catch(function (err) {
+        })["catch"](function (err) {
           agentState.executingJob = false;
           return logger.error(err);
         });
-      }).catch(function (err) {
+      })["catch"](function (err) {
         return logger.error(err);
       });
     }, requestInterval);

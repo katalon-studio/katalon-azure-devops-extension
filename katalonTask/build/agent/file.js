@@ -19,7 +19,12 @@ module.exports = {
       return decompress(filePath, targetDir, {
         filter: function filter(decompressFile) {
           var decompressPath = decompressFile.path;
-          return !decompressPath.includes('.git') && !decompressPath.includes('__MACOSX');
+
+          if (decompressPath.includes('.git/') || decompressPath.includes('__MACOSX')) {
+            console.log(decompressPath);
+          }
+
+          return !decompressPath.includes('.git/') && !decompressPath.includes('__MACOSX');
         }
       });
     });

@@ -96,8 +96,7 @@ module.exports = {
       var ksLocationParentDir = _ref2.ksLocationParentDir;
       logger.info("Katalon Folder: ".concat(ksLocationParentDir));
       var ksExecutable = find(ksLocationParentDir, /katalon$|katalon\.exe$/);
-      logger.info("Katalon Executable File: ".concat(ksExecutable));
-      fs.chmodSync(ksExecutable, '755');
+      logger.info("Katalon Executable File: ".concat(ksExecutable)); // fs.chmodSync(ksExecutable, '755');
 
       if (ksExecutable.indexOf(' ') >= 0) {
         ksExecutable = "\"".concat(ksExecutable, "\"");

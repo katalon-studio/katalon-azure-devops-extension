@@ -1,4 +1,5 @@
-call cd katalonTask 
+cd katalonTask 
+rmdir /s /q build
 call npx babel src --out-dir build
-call cd ..
+cd ..
 call tfx extension create --manifest-globs vss-extension.json

@@ -8,13 +8,13 @@ var version, location, executeArgs, x11Display, xvfbConfiguration, ksProjectPath
 
 function run() {
     try {
-        version = '6.1.0';
+        version = '6.1.1';
         console.log("version: ", version);
 
         location = '';
         console.log("location: ", location);
 
-        executeArgs = '-retry=0 -testSuitePath=\"Test Suites/TS_RegressionTest\" -executionProfile=\"default\" -browserType=\"Firefox\"';
+        executeArgs = '-retry=0 -testSuitePath="Test Suites/TS_RegressionTest" -executionProfile="default" -browserType="Firefox"';
         console.log('execute: ', executeArgs);
 
         x11Display = '';
@@ -28,8 +28,12 @@ function run() {
         const projectPathPattern = path.resolve(dirPath, projectFilePattern);
         [ksProjectPath] = glob.sync(projectPathPattern, { nodir: true });
 
+        String.prototype.replaceAll = function(search, replacement) {
+            var target = this;
+            return target.replace(new RegExp(search, 'g'), replacement);
+        };
+        ksProjectPath = ksProjectPath.replaceAll("/", "\\")
         console.log(ksProjectPath);
-
         ks.execute(version, location, ksProjectPath, executeArgs,
             x11Display, xvfbConfiguration)
         .catch((error) => {
@@ -38,7 +42,7 @@ function run() {
     }
     catch (err) {
         console.log(err);
-        tl.setResult(tl.TaskResult.Failed, err.message);
+        // tl.setResult(tl.TaskResult.Failed, err.message);
     }
     return [2 /*return*/];
 }
