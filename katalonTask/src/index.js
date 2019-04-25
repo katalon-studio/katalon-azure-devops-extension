@@ -44,7 +44,6 @@ function run() {
             })
     }
     catch (err) {
-        console.log(err);
         tl.setResult(tl.TaskResult.Failed, err.message);
     }
 }

@@ -2,7 +2,7 @@
 
 var logger = {
   info: console.log,
-  debug: console.log,
+  debug: function debug() {},
   error: console.error
 };
 module.exports = logger;

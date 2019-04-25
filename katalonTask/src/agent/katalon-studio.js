@@ -21,9 +21,11 @@ function find(startPath, filter, callback) {
     if (stat.isDirectory()) {
       const file = find(filename, filter, callback);
       if (!_.isEmpty(file)) {
+        // eslint-disable-next-line consistent-return
         return file;
       }
     } else if (filter.test(filename)) {
+      // eslint-disable-next-line consistent-return
       return filename;
     }
   }
@@ -31,7 +33,8 @@ function find(startPath, filter, callback) {
 
 function getKsLocation(ksVersionNumber, ksLocation) {
   if (!ksVersionNumber && !ksLocation) {
-    defaultLogger.error("Please specify 'ksVersionNumber' or 'ksLocation'");
+    // eslint-disable-next-line prefer-promise-reject-errors
+    return Promise.reject("Please specify 'ksVersionNumber' or 'ksLocation'");
   }
 
   if (ksLocation) {
@@ -45,28 +48,17 @@ function getKsLocation(ksVersionNumber, ksLocation) {
       const osVersion = os.getVersion();
       const ksVersion = body.find(item => item.version === ksVersionNumber
         && item.os === osVersion);
-      const fileName = ksVersion.filename;
-      let fileExtension;
-      if (fileName.endsWith('.zip')) {
-        fileExtension = '.zip';
-      } else if (fileName.endsWith('.tar.gz')) {
-        fileExtension = '.tar.gz';
-      } else {
-        throw `Unexpected file name ${fileName}`;
-      }
+
       const userhome = os.getUserHome();
       const ksLocationParentDir = path.join(userhome, '.katalon', ksVersionNumber);
       const katalonDoneFilePath = path.join(ksLocationParentDir, '.katalon.done');
-
-      const ksLocationDirName = fileName.replace(fileExtension, '');
-      const ksLocation = path.join(ksLocationParentDir, ksLocationDirName);
 
       if (fs.existsSync(katalonDoneFilePath)) {
         return Promise.resolve({ ksLocationParentDir });
       }
 
       defaultLogger.info(`Download Katalon Studio ${ksVersionNumber} to ${ksLocationParentDir}.`);
-      return file.downloadAndExtract(ksVersion.url, ksLocationParentDir)
+      return file.downloadAndExtract(ksVersion.url, ksLocationParentDir, false)
         .then(() => {
           fs.writeFileSync(katalonDoneFilePath, '');
           return Promise.resolve({ ksLocationParentDir });
@@ -83,7 +75,10 @@ module.exports = {
         logger.info(`Katalon Folder: ${ksLocationParentDir}`);
         let ksExecutable = find(ksLocationParentDir, /katalon$|katalon\.exe$/);
         logger.info(`Katalon Executable File: ${ksExecutable}`);
-        // fs.chmodSync(ksExecutable, '755');
+
+        if (!os.getVersion().includes('Windows')) {
+          fs.chmodSync(ksExecutable, '755');
+        }
 
         if (ksExecutable.indexOf(' ') >= 0) {
           ksExecutable = `"${ksExecutable}"`;

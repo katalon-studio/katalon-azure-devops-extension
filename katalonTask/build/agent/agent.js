@@ -43,7 +43,7 @@ var properties = require('./properties');
 var utils = require('./utils');
 
 var configFile = utils.getPath('agentconfig');
-var requestInterval = 10000;
+var requestInterval = 60 * 1000;
 var projectFilePattern = '**/*.prj';
 var testOpsPropertiesFile = 'com.kms.katalon.integration.analytics.properties';
 var JOB_STATUS = Object.freeze({
@@ -140,7 +140,7 @@ function executeJob(token, jobInfo, keepFiles) {
 
   var logFilePath = path.resolve(tmpDirPath, 'debug.log');
   var jLogger = jobLogger.getLogger(logFilePath);
-  return file.downloadAndExtract(jobInfo.downloadUrl, tmpDirPath, jLogger).then(function () {
+  return file.downloadAndExtract(jobInfo.downloadUrl, tmpDirPath, true, jLogger).then(function () {
     logger.info('Executing job...'); // Find project file inside project directory
 
     var projectPathPattern = path.resolve(tmpDirPath, projectFilePattern); // eslint-disable-next-line no-param-reassign

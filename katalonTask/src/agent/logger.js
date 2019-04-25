@@ -1,6 +1,6 @@
 const logger = {
   info: console.log,
-  debug: console.log,
+  debug: (() => {}),
   error: console.error
 }
 

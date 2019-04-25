@@ -18,7 +18,7 @@ const properties = require('./properties');
 const utils = require('./utils');
 
 const configFile = utils.getPath('agentconfig');
-const requestInterval = 10000;
+const requestInterval = 60 * 1000;
 const projectFilePattern = '**/*.prj';
 const testOpsPropertiesFile = 'com.kms.katalon.integration.analytics.properties';
 
@@ -115,7 +115,7 @@ function executeJob(token, jobInfo, keepFiles) {
   const logFilePath = path.resolve(tmpDirPath, 'debug.log');
   const jLogger = jobLogger.getLogger(logFilePath);
 
-  return file.downloadAndExtract(jobInfo.downloadUrl, tmpDirPath, jLogger)
+  return file.downloadAndExtract(jobInfo.downloadUrl, tmpDirPath, true, jLogger)
     .then(() => {
       logger.info('Executing job...');
       // Find project file inside project directory
