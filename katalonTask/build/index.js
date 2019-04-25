@@ -45,7 +45,7 @@ function run() {
     ksProjectPath = _glob$sync2[0];
     console.log(ksProjectPath);
     ks.execute(version, location, ksProjectPath, executeArgs, x11Display, xvfbConfiguration).then(function () {
-      tl.setResult(tl.TaskResult.Succeeded, "run katalon succes");
+      console.log("Run Katalon success!");
     })["catch"](function (error) {
       tl.setResult(tl.TaskResult.Failed, error.message);
       console.log(error);

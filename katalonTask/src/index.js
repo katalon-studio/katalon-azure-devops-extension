@@ -36,7 +36,7 @@ function run() {
         ks.execute(version, location, ksProjectPath, executeArgs,
             x11Display, xvfbConfiguration)
             .then(()=> {
-                tl.setResult(tl.TaskResult.Succeeded, "run katalon succes");
+                console.log("Run Katalon success!");
             })
             .catch((error) => {
                 tl.setResult(tl.TaskResult.Failed, error.message);
