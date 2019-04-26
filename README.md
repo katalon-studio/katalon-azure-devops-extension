@@ -26,9 +26,7 @@ npm install
 ```
 
 ## Create GUID
-For id in Extensions Azure Devops.
-
-https://www.guidgen.com/
+For id in Extensions Azure Devops, click [here](https://www.guidgen.com/).
 
 ## Source code
 From [Katalon Cli](https://github.com/kms-technology/katalon-cli)
