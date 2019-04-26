@@ -1,10 +1,14 @@
 # Azure Devops Extension
 
 
-## How to create package extension:
+## How to build vsix
+
+**Note**
+
+UPDATE VERSION BEFORE BUILD PACKAGE
 
 ```bash
-tfx extension create --manifest-globs vss-extension.json
+run: package.bat
 ```
 
 ## Install bash
@@ -13,6 +17,7 @@ tfx extension create --manifest-globs vss-extension.json
 npm install --save-dev @babel/core @babel/cli
 ```
 
-```bash
-npx babel src --out-dir build
-```
+
+### Create GUID
+
+https://www.guidgen.com/

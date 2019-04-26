@@ -28,15 +28,18 @@ function run() {
 
         const projectFilePattern = "**/*.prj";
         const dirPath = tl.cwd();
-        const projectPathPattern = path.resolve(dirPath, projectFilePattern);
-        [ksProjectPath] = glob.sync(projectPathPattern, { nodir: true });
 
-        console.log(ksProjectPath);
+        // console.log(dirPath);
+        const projectPathPattern = path.resolve(dirPath, projectFilePattern);
+        const resultFind = glob.sync(projectPathPattern, { nodir: true });
+        [ksProjectPath] = resultFind;
+        // console.log(resultFind);
+        console.log('ksProjectPath: ', ksProjectPath);
 
         ks.execute(version, location, ksProjectPath, executeArgs,
             x11Display, xvfbConfiguration)
             .then(()=> {
-                console.log("Run Katalon success!");
+                console.log("Kalaton Studio execute done!");
             })
             .catch((error) => {
                 tl.setResult(tl.TaskResult.Failed, error.message);

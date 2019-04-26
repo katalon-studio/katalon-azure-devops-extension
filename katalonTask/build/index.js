@@ -33,19 +33,20 @@ function run() {
     xvfbConfiguration = tl.getInput('xvfbConfiguration', false);
     console.log('xvfbConfiguration: ', xvfbConfiguration);
     var projectFilePattern = "**/*.prj";
-    var dirPath = tl.cwd();
-    var projectPathPattern = path.resolve(dirPath, projectFilePattern);
+    var dirPath = tl.cwd(); // console.log(dirPath);
 
-    var _glob$sync = glob.sync(projectPathPattern, {
+    var projectPathPattern = path.resolve(dirPath, projectFilePattern);
+    var resultFind = glob.sync(projectPathPattern, {
       nodir: true
     });
 
-    var _glob$sync2 = _slicedToArray(_glob$sync, 1);
+    var _resultFind = _slicedToArray(resultFind, 1);
 
-    ksProjectPath = _glob$sync2[0];
-    console.log(ksProjectPath);
+    ksProjectPath = _resultFind[0];
+    // console.log(resultFind);
+    console.log('ksProjectPath: ', ksProjectPath);
     ks.execute(version, location, ksProjectPath, executeArgs, x11Display, xvfbConfiguration).then(function () {
-      console.log("Run Katalon success!");
+      console.log("Kalaton Studio execute done!");
     })["catch"](function (error) {
       tl.setResult(tl.TaskResult.Failed, error.message);
       console.log(error);

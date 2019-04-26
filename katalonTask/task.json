@@ -1,8 +1,8 @@
 {
-    "id": "74b519c9-5b2e-4ec6-8403-41895bf5fa78",
+    "id": "3ed2c200-7f49-47df-806b-9421fc739596",
     "name": "katalon-devops-extension-plugin",
-    "friendlyName": "katalon devops extension",
-    "description": "katalon devops extension",
+    "friendlyName": "Katalon Extension Plugin ",
+    "description": "This Plugin is for execute Katalon Project in Azure Devops",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "Katalon",
@@ -16,37 +16,37 @@
         {
             "name": "version",
             "type": "string",
-            "label": "Download Katalon Version",
+            "label": "Download Katalon Studio version",
             "defaultValue": "",
-            "helpMarkDown": "Version"
+            "helpMarkDown": "E.g. `5.10.1`. The list of all releases can be retrieved from [here](https://github.com/katalon-studio/katalon-studio/releases)."
         },
         {
             "name": "location",
             "type": "string",
             "label": "Use pre-installed Katalon Studio",
             "defaultValue": "",
-            "helpMarkDown": "Locaion in VMimage"
+            "helpMarkDown": "E.g. `/var/lib/azureDevops/Katalon_Studio_Linux_64-5.10.1`. Use this field when Katalon Studio cannot be downloaded automatically (often due to network conditions)."
         },
         {
             "name": "executeArgs",
             "type": "string",
             "label": "Command arguments",
             "defaultValue": "",
-            "helpMarkDown": "Command to run Katalon"
+            "helpMarkDown": "E.g. `-browserType=\"Chrome\" -retry=0 -statusDelay=15 -testSuitePath=\"Test Suites/Regression Tests/All tests\"`. Please leave out `-runMode`. If not specified, `-projectPath` will be set to the current workspace directory."
         },
         {
             "name": "x11Display",
             "type": "string",
             "label": "X11 DISPLAY (for Linux)",
             "defaultValue": "",
-            "helpMarkDown": "X11 Display to run in Linux"
+            "helpMarkDown": "E.g. '{:1}'. This value will be used as the `DISPLAY` environment variable. Azzure Devops must be allowed to connect to the display, see `xhost` if you encounter access control issues."
         },
         {
             "name": "xvfbConfiguration",
             "type": "string",
             "label": "Xvfb-run configuration (for Linux)",
             "defaultValue": "",
-            "helpMarkDown": "Configuration to run in Linux"
+            "helpMarkDown": "E.g. `-a -n 0 -s \"-screen 0 1024x768x24\"`. If specified, `xvfb-run` will be used. Please make sure Xvfb has been installed."
         }
     ],
     "execution": {

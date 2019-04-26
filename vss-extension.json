@@ -2,14 +2,14 @@
     "manifestVersion": 1,
     "id": "katalon-devops-extension-plugin",
     "name": "Katalon Extension Plugin",
-    "version": "0.0.19",
+    "version": "0.0.1",
     "publisher": "AnhTuan",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
         }
     ],    
-    "description": "Katalon Devops Extension",
+    "description": "This Plugin is for execute Katalon Project in Azure Devops",
     "categories": [
         "Azure Pipelines"
     ],
