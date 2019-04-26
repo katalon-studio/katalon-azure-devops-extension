@@ -59,6 +59,14 @@ function getKsLocation(ksVersionNumber, ksLocation) {
     var ksVersion = body.find(function (item) {
       return item.version === ksVersionNumber && item.os === osVersion;
     });
+    var fileName = ksVersion.filename;
+    var fileExtension = path.extname(fileName);
+
+    if (!['.zip', '.tar.gz'].includes(fileExtension)) {
+      // eslint-disable-next-line prefer-promise-reject-errors
+      return Promise.reject("Unexpected file name ".concat(fileName));
+    }
+
     var userhome = os.getUserHome();
     var ksLocationParentDir = path.join(userhome, '.katalon', ksVersionNumber);
     var katalonDoneFilePath = path.join(ksLocationParentDir, '.katalon.done');

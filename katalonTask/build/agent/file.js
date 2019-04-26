@@ -16,7 +16,7 @@ module.exports = {
       filter: function filter(decompressFile) {
         if (haveFilter) {
           var decompressPath = decompressFile.path;
-          return !decompressPath.includes('/.git/') && !decompressPath.includes('__MACOSX');
+          return !decompressPath.includes('.git/') && !decompressPath.includes('__MACOSX');
         } else {
           return true;
         }

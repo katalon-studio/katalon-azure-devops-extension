@@ -1,23 +1,36 @@
 # Azure Devops Extension
 
 
-## How to build vsix
+## How to build package to update Azure Devops
 
-**Note**
+**Note: UPDATE VERSION BEFORE BUILD PACKAGE, see in `vss-extension.json`**
 
-UPDATE VERSION BEFORE BUILD PACKAGE
-
+From project root, execute: 
 ```bash
-run: package.bat
+tfx extension create --manifest-globs vss-extension.json
 ```
 
-## Install bash
+or execute `package.bat`.
+
+
+## Install babel
 
 ```bash
 npm install --save-dev @babel/core @babel/cli
 ```
 
+## Install npm
 
-### Create GUID
+```bash
+npm install
+```
+
+## Create GUID
+For id in Extensions Azure Devops.
 
 https://www.guidgen.com/
+
+## Source code
+From [Katalon Cli](https://github.com/kms-technology/katalon-cli)
+
+**DON'T COPY `logger.js` FROM KATALON-CLI.**

@@ -39,7 +39,7 @@
             "type": "string",
             "label": "X11 DISPLAY (for Linux)",
             "defaultValue": "",
-            "helpMarkDown": "E.g. '{:1}'. This value will be used as the `DISPLAY` environment variable. Azzure Devops must be allowed to connect to the display, see `xhost` if you encounter access control issues."
+            "helpMarkDown": "E.g. `:1`. This value will be used as the `DISPLAY` environment variable. Azzure Devops must be allowed to connect to the display, see `xhost` if you encounter access control issues."
         },
         {
             "name": "xvfbConfiguration",

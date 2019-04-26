@@ -59,8 +59,8 @@ module.exports = {
     options = buildOptions(url, headers, _objectSpread({}, options, {
       json: true,
       method: method
-    })); // logger.debug('REQUEST:\n', options);
-
+    }));
+    logger.debug('REQUEST:\n', options);
     var promise = new Promise(function (resolve, reject) {
       _request(options, function (error, response, body) {
         if (error) {
@@ -75,8 +75,8 @@ module.exports = {
         }
       });
     }).then(function (response) {
-      response.requestUrl = options.url; // logger.debug('RESPONSE:\n', response);
-
+      response.requestUrl = options.url;
+      logger.debug('RESPONSE:\n', response);
       return response;
     });
     return promise;
