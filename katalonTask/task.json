@@ -1,6 +1,6 @@
 {
-    "id": "3ed2c200-7f49-47df-806b-9421fc739596",
-    "name": "katalon-devops-extension-plugin",
+    "id": "edc69d6c-d502-4aae-a852-9759afd99c54",
+    "name": "KatalonPlugin",
     "friendlyName": "Katalon Extension Plugin ",
     "description": "This Plugin is for execute Katalon Project in Azure Devops",
     "helpMarkDown": "",
