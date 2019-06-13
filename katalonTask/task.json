@@ -1,17 +1,17 @@
 {
     "id": "4c045a76-788c-4c23-b965-ecc7ae4a5d40",
-    "name": "KatalonExtensionTask",
-    "friendlyName": "Katalon Extension Plugin",
-    "description": "This Plugin is for execute Katalon Project in Azure Devops",
+    "name": "ExecuteKatalonStudioTask",
+    "friendlyName": "Execute Katalon Studio project",
+    "description": "Execute Katalon Studio project",
     "helpMarkDown": "",
-    "category": "Utility",
-    "author": "Katalon",
+    "category": "Azure Pipelines",
+    "author": "Katalon LLC",
     "version": {
         "Major": 0,
         "Minor": 1,
         "Patch": 4
     },
-    "instanceNameFormat": "Katalon Execution Task", 
+    "instanceNameFormat": "Execute Katalon Studio project", 
     "inputs": [
         {
             "name": "version",

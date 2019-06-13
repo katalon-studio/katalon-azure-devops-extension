@@ -1,16 +1,16 @@
 {
     "manifestVersion": 1,
-    "id": "KatalonExtensionTask",
-    "name": "Katalon Extension Plugin",
+    "id": "katalon",
+    "name": "Katalon for Azure DevOps",
     "version": "0.0.1",
-    "publisher": "AnhTuan",
+    "publisher": "Katalon LLC",
     "public": false,
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
         }
     ],    
-    "description": "This Plugin is for execute Katalon Project in Azure Devops",
+    "description": "This plugin is for executing Katalon Studio Projects on Azure Devops",
     "categories": [
         "Azure Pipelines"
     ],
@@ -29,27 +29,30 @@
     ],
     "content": {
         "details": {
-          "path": "overview.md"
+            "path": "overview.md"
         }
-      },
-    "link": {
-        "repository": {
-            "uri": "https://forum.katalon.com/"
+    },
+    "links": {
+        "getstarted": {
+            "uri": "https://docs.katalon.com"
+        },
+        "support": {
+            "uri": "https://forum.katalon.com"
         }
     },
     "repository": {
         "type": "git",
-        "uri": "https://github.com/katalon-studio"
-      },
+        "uri": "https://github.com/katalon-studio/katalon-studio"
+    },
     "contributions": [
         {
-            "id": "KatalonExtensionTask",
+            "id": "ExecuteKatalonStudioTask",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "katalonTask"
+                "name": "ExecuteKatalonStudioTask"
             }
         }
     ]
