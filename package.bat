@@ -1,4 +1,5 @@
 cd katalonTask 
+call npm install
 rmdir /s /q build
 call npx babel src --out-dir build
 cd ..

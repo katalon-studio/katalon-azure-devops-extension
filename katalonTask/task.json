@@ -1,15 +1,15 @@
 {
     "id": "4c045a76-788c-4c23-b965-ecc7ae4a5d40",
-    "name": "ExecuteKatalonStudioTask",
-    "friendlyName": "Execute Katalon Studio project",
+    "name": "katalonTask",
+    "friendlyName": "Execute Katalon Studio Tests",
     "description": "Execute Katalon Studio project",
     "helpMarkDown": "",
-    "category": "Azure Pipelines",
+    "category": "Test",
     "author": "Katalon LLC",
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 4
+        "Patch": 5
     },
     "instanceNameFormat": "Execute Katalon Studio project", 
     "inputs": [
