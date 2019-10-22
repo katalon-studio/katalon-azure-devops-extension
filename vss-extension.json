@@ -2,9 +2,13 @@
     "manifestVersion": 1,
     "id": "katalon",
     "name": "Katalon for Azure DevOps",
-    "version": "0.0.5",
+    "version": "1.0.2",
     "publisher": "katalon-llc",
-    "public": false,
+    "public": true,
+    "galleryFlags": [
+        "Paid",
+        "Preview"
+    ],
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
@@ -38,6 +42,12 @@
         },
         "support": {
             "uri": "https://forum.katalon.com"
+        },
+        "pricing": {
+            "path": "pricing.md"
+        },
+        "privacy": {
+            "path": "privacy.md"
         }
     },
     "repository": {

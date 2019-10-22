@@ -94,6 +94,9 @@ module.exports = {
         if (ksArgs.indexOf('-projectPath') < 0) {
           ksCommand = `${ksCommand} -projectPath="${ksProjectPath}"`;
         }
+
+        ksArgs= ksArgs.replace('-consoleLog', '').replace('-noExit', '');
+
         ksCommand = `${ksCommand} ${ksArgs}`;
         logger.info(`Execute Katalon Studio: ${ksCommand}`);
         if (logger !== defaultLogger) {
