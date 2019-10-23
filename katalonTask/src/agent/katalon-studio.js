@@ -93,11 +93,11 @@ module.exports = {
         let ksCommand = `${ksExecutable}`;
 
         if (ksArgs.indexOf('-noSplash') < 0) {
-          ksCommand = `${ksCommand} -noSplash"`;
+          ksCommand = `${ksCommand} -noSplash`;
         }
 
         if (ksArgs.indexOf('-runMode=console') < 0) {
-          ksCommand = `${ksCommand} -runMode=console"`;
+          ksCommand = `${ksCommand} -runMode=console`;
         }
 
         if (ksArgs.indexOf('-projectPath') < 0) {
