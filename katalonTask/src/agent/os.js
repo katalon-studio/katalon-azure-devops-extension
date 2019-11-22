@@ -49,6 +49,8 @@ module.exports = {
     const args = [];
     const type = os.type();
     let shell;
+    let env = process.env;
+    env.ECLIPSE_SANDBOX = '1.11';
     if (type === 'Windows_NT') {
       cmd = 'cmd';
       args.push('/c');
@@ -73,6 +75,7 @@ module.exports = {
       const cmdProcess = childProcess.spawn(cmd, args, {
         cwd: tmpDirPath,
         shell,
+        env,
       });
       cmdProcess.stdout.on('data', (data) => {
         logger.debug(data.toString());
