@@ -6,8 +6,10 @@ const file = require('./file');
 const http = require('./http');
 const defaultLogger = require('./logger');
 const os = require('./os');
+const utils = require('./utils');
 
-const releasesList = 'https://raw.githubusercontent.com/katalon-studio/katalon-studio/master/releases.json';
+const releasesList =
+  'https://raw.githubusercontent.com/katalon-studio/katalon-studio/master/releases.json';
 
 function find(startPath, filter, callback) {
   if (!fs.existsSync(startPath)) {
@@ -33,8 +35,7 @@ function find(startPath, filter, callback) {
 
 function getKsLocation(ksVersionNumber, ksLocation) {
   if (!ksVersionNumber && !ksLocation) {
-    // eslint-disable-next-line prefer-promise-reject-errors
-    return Promise.reject("Please specify 'ksVersionNumber' or 'ksLocation'");
+    throw new Error("Please specify 'ksVersionNumber' or 'ksLocation'");
   }
 
   if (ksLocation) {
@@ -43,76 +44,74 @@ function getKsLocation(ksVersionNumber, ksLocation) {
     });
   }
 
-  return http.request(releasesList, '', {}, 'GET')
-    .then(({ body }) => {
-      const osVersion = os.getVersion();
-      const ksVersion = body.find(item => item.version === ksVersionNumber
-        && item.os === osVersion);
+  return http.request(releasesList, '', {}, 'GET').then(({ body }) => {
+    const osVersion = os.getVersion();
+    const ksVersion = body.find(
+      (item) => item.version === ksVersionNumber && item.os === osVersion,
+    );
 
-      const fileName = ksVersion.filename;
-      const fileExtension = path.extname(fileName);
-      if (!['.zip', '.tar.gz'].includes(fileExtension)) {
-        // eslint-disable-next-line prefer-promise-reject-errors
-        return Promise.reject(`Unexpected file name ${fileName}`);
-      }
+    const userhome = os.getUserHome();
+    const ksLocationParentDir = path.join(userhome, '.katalon', ksVersionNumber);
+    const katalonDoneFilePath = path.join(ksLocationParentDir, '.katalon.done');
 
-      const userhome = os.getUserHome();
-      const ksLocationParentDir = path.join(userhome, '.katalon', ksVersionNumber);
-      const katalonDoneFilePath = path.join(ksLocationParentDir, '.katalon.done');
+    if (fs.existsSync(katalonDoneFilePath)) {
+      return { ksLocationParentDir };
+    }
 
-      if (fs.existsSync(katalonDoneFilePath)) {
-        return Promise.resolve({ ksLocationParentDir });
-      }
-
-      defaultLogger.info(`Download Katalon Studio ${ksVersionNumber} to ${ksLocationParentDir}.`);
-      return file.downloadAndExtract(ksVersion.url, ksLocationParentDir, false)
-        .then(() => {
-          fs.writeFileSync(katalonDoneFilePath, '');
-          return Promise.resolve({ ksLocationParentDir });
-        });
+    defaultLogger.info(`Download Katalon Studio ${ksVersionNumber} to ${ksLocationParentDir}.`);
+    return file.downloadAndExtract(ksVersion.url, ksLocationParentDir, false).then(() => {
+      fs.writeFileSync(katalonDoneFilePath, '');
+      return { ksLocationParentDir };
     });
+  });
 }
 
 module.exports = {
+  execute(
+    ksVersionNumber,
+    ksLocation,
+    ksProjectPath,
+    ksArgs,
+    x11Display,
+    xvfbConfiguration,
+    logger = defaultLogger,
+  ) {
+    return getKsLocation(ksVersionNumber, ksLocation).then(({ ksLocationParentDir }) => {
+      logger.info(`Katalon Folder: ${ksLocationParentDir}`);
 
-  execute(ksVersionNumber, ksLocation, ksProjectPath, ksArgs,
-    x11Display, xvfbConfiguration, logger = defaultLogger) {
-    return getKsLocation(ksVersionNumber, ksLocation)
-      .then(({ ksLocationParentDir }) => {
-        logger.info(`Katalon Folder: ${ksLocationParentDir}`);
-        let ksExecutable = find(ksLocationParentDir, /katalonc$|katalonc\.exe$|katalon$|katalon\.exe$/);
-        logger.info(`Katalon Executable File: ${ksExecutable}`);
+      let ksExecutable =
+        find(ksLocationParentDir, /katalonc$|katalonc\.exe$/) ||
+        find(ksLocationParentDir, /katalon$|katalon\.exe$/);
+      if (!ksExecutable) {
+        throw Error(`Unable to find Katalon Studio executable in ${ksLocationParentDir}`);
+      }
 
-        if (!os.getVersion().includes('Windows')) {
-          fs.chmodSync(ksExecutable, '755');
-        }
+      logger.info(`Katalon Executable File: ${ksExecutable}`);
 
-        if (ksExecutable.indexOf(' ') >= 0) {
-          ksExecutable = `"${ksExecutable}"`;
-        }
-        let ksCommand = `${ksExecutable}`;
+      if (!os.getVersion().includes('Windows')) {
+        fs.chmodSync(ksExecutable, '755');
+      }
 
-        if (ksArgs.indexOf('-noSplash') < 0) {
-          ksCommand = `${ksCommand} -noSplash`;
-        }
+      if (ksExecutable.indexOf(' ') >= 0) {
+        ksExecutable = `"${ksExecutable}"`;
+      }
 
-        if (ksArgs.indexOf('-runMode=console') < 0) {
-          ksCommand = `${ksCommand} -runMode=console`;
-        }
+      let ksCommand = utils.updateCommand(
+        ksExecutable,
+        { flag: '-noSplash' },
+        { flag: '-runMode', value: 'console' },
+        { flag: '-projectPath', value: ksProjectPath },
+      );
 
-        if (ksArgs.indexOf('-projectPath') < 0) {
-          ksCommand = `${ksCommand} -projectPath="${ksProjectPath}"`;
-        }
+      ksCommand = `${ksCommand} ${ksArgs}`;
 
-        ksArgs= ksArgs.replace('-consoleLog', '').replace('-noExit', '');
+      logger.info(`Execute Katalon Studio: ${ksCommand}`);
+      if (logger !== defaultLogger) {
+        defaultLogger.debug(`Execute Katalon Studio command: ${ksCommand}`);
+      }
 
-        ksCommand = `${ksCommand} ${ksArgs}`;
-        logger.info(`Execute Katalon Studio: ${ksCommand}`);
-        if (logger !== defaultLogger) {
-          defaultLogger.debug(`Execute Katalon Studio command: ${ksCommand}`);
-        }
-        return os.runCommand(ksCommand, x11Display, xvfbConfiguration, logger);
-      });
+      return os.runCommand(ksCommand, x11Display, xvfbConfiguration, logger);
+    });
   },
 
   getKsLocation,

@@ -24,14 +24,18 @@ function buildOptions(url, headers, options) {
 }
 
 module.exports = {
-
-  stream(url, filePath) {
+  stream(url, filePath, opts = {}) {
     logger.info(`Downloading from ${url} to ${filePath}.`);
     const promise = new Promise((resolve) => {
       const method = 'GET';
-      const options = buildOptions(url, {}, {
-        method,
-      });
+      const options = buildOptions(
+        url,
+        {},
+        {
+          ...opts,
+          method,
+        },
+      );
       request(options)
         .pipe(fs.createWriteStream(filePath))
         .on('finish', () => {
@@ -53,7 +57,6 @@ module.exports = {
       json: true,
       method,
     });
-    // logger.debug('REQUEST:\n', options);
     const promise = new Promise((resolve, reject) => {
       request(options, (error, response, body) => {
         if (error) {
@@ -66,36 +69,8 @@ module.exports = {
       });
     }).then((response) => {
       response.requestUrl = options.url;
-      // logger.debug('RESPONSE:\n', response);
       return response;
     });
     return promise;
   },
-
-  uploadToS3(signedUrl, filePath) {
-    const stats = fs.statSync(filePath);
-    const headers = {
-      'content-type': 'application/octet-stream',
-      accept: 'application/json',
-      'Content-Length': stats.size,
-    };
-    const method = 'PUT';
-    const options = buildOptions(signedUrl, headers, {
-      method,
-      json: true,
-    });
-    const promise = new Promise((resolve, reject) => {
-      fs.createReadStream(filePath).pipe(request(options, (error, response, body) => {
-        if (error) {
-          logger.error(error);
-          reject(error);
-        } else {
-          logger.info(`${method} ${response.request.href} ${response.statusCode}.`);
-          resolve({ status: response.statusCode, body });
-        }
-      }));
-    });
-    return promise;
-  },
-
 };

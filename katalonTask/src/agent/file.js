@@ -12,18 +12,19 @@ module.exports = {
         if (haveFilter) {
           const decompressPath = decompressFile.path;
           return !decompressPath.includes('.git/') && !decompressPath.includes('__MACOSX');
-        } else {
-          return true;
         }
+        return true;
       },
     });
   },
 
-  downloadAndExtract(url, targetDir, haveFilter, logger = defaultLogger) {
+  downloadAndExtract(url, targetDir, haveFilter = false, logger = defaultLogger) {
     logger.info(`Downloading from ${url}. It may take a few minutes.`);
     const file = tmp.fileSync();
     const filePath = file.name;
-    return http.stream(url, filePath)
+    logger.debug(`Download into temporary directory: ${filePath}`);
+    return http
+      .stream(url, filePath)
       .then(() => this.extract(filePath, targetDir, haveFilter, logger));
   },
 };
