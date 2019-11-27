@@ -5,22 +5,22 @@ const execute = require('./execute');
 
 (function() {
     const version = tl.getInput('version', false);
-    console.log("version: ", version);
+    console.log('Download Katalon Studio version:', version);
 
-    const location = tl.getInput("location", false);
-    console.log("location: ", location);
+    const location = tl.getInput('location', false);
+    console.log('Use pre-installed Katalon Studio:', location);
 
     const executeArgs = tl.getInput('executeArgs', false);
-    console.log('execute: ', executeArgs);
+    console.log('Command arguments:', executeArgs);
 
     const x11Display = tl.getInput('x11Display', false);
-    console.log('x11 display:', x11Display);
+    console.log('X11 DISPLAY (for Linux):', x11Display);
 
     const xvfbConfiguration = tl.getInput('xvfbConfiguration', false);
-    console.log('xvfbConfiguration: ', xvfbConfiguration);
+    console.log('Xvfb-run configuration (for Linux):', xvfbConfiguration);
 
     const dirPath = tl.cwd();
-    console.log('dirPath: ', dirPath);
+    console.log('Working directory: ', dirPath);
 
     execute({
         version,

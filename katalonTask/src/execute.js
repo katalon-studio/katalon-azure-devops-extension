@@ -14,7 +14,7 @@ module.exports = function({ version, location, executeArgs, x11Display, xvfbConf
 
         const projectPathPattern = path.resolve(dirPath, projectFilePattern);
         const [ksProjectPath] = glob.sync(projectPathPattern, { nodir: true });
-        logger.info('ksProjectPath:', ksProjectPath);
+        logger.info('Katalon Studio project path:', ksProjectPath);
 
         ks.execute(version, location, ksProjectPath, executeArgs,
             x11Display, xvfbConfiguration)
