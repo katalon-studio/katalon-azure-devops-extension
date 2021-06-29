@@ -51,7 +51,7 @@ function getKsLocation(ksVersionNumber, ksLocation) {
 
       const fileName = ksVersion.filename;
       const fileExtension = path.extname(fileName);
-      if (!['.zip', '.tar.gz'].includes(fileExtension)) {
+      if (!['.zip', '.gz'].includes(fileExtension)) {
         // eslint-disable-next-line prefer-promise-reject-errors
         return Promise.reject(`Unexpected file name ${fileName}`);
       }
