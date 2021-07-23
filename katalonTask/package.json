@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "azure-pipelines-task-lib": "^2.7.7",
+    "azure-pipelines-task-lib": "^2.12.2",
     "decompress": "^4.2.0",
     "find": "^0.3.0",
     "fs": "0.0.1-security",
