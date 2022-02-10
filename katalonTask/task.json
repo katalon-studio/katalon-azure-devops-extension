@@ -11,6 +11,7 @@
         "Minor": 0,
         "Patch": 9
     },
+    "minimumAgentVersion": "2.144.0",
     "instanceNameFormat": "Execute Katalon Studio project", 
     "inputs": [
         {
@@ -50,7 +51,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "build/index.js"
         }
     }
