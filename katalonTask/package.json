@@ -1,6 +1,6 @@
 {
   "name": "katalon-devops-extension",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "",
   "main": "build/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "azure-pipelines-task-lib": "^2.7.7",
+    "azure-pipelines-task-lib": "^3.1.7",
     "decompress": "^4.2.0",
     "find": "^0.3.0",
     "fs": "0.0.1-security",
