@@ -2,3 +2,4 @@
 /katalonTask/build
 node_modules
 .vscode
+*.vsix
