@@ -51,7 +51,7 @@
         }
     ],
     "execution": {
-        "Node20": {
+        "Node20_1": {
             "target": "build/index.js"
         }
     }
