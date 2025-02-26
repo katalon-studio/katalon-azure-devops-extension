@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "katalon",
     "name": "Katalon for Azure DevOps",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "publisher": "katalon-llc",
     "public": true,
     "galleryFlags": [
@@ -13,7 +13,7 @@
         {
             "id": "Microsoft.VisualStudio.Services"
         }
-    ],    
+    ],
     "description": "This plugin is for executing Katalon Studio Projects on Azure Devops",
     "categories": [
         "Azure Pipelines"
@@ -23,13 +23,12 @@
         "Katalon Studio"
     ],
     "icons": {
-        "default": "images/katalon-logo.png"        
+        "default": "images/katalon-logo.png"
     },
     "files": [
         {
             "path": "katalonTask"
         }
-        
     ],
     "content": {
         "details": {
