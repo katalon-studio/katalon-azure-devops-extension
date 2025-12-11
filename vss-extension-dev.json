@@ -1,10 +1,10 @@
 {
     "manifestVersion": 1,
-    "id": "katalon",
-    "name": "Katalon for Azure DevOps",
+    "id": "katalon-dev",
+    "name": "Katalon for Azure DevOps - Dev",
     "version": "1.2.0",
     "publisher": "katalon-llc",
-    "public": true,
+    "public": false,
     "galleryFlags": [
         "Paid",
         "Preview"
@@ -55,13 +55,13 @@
     },
     "contributions": [
         {
-            "id": "katalonTask",
+            "id": "katalonTaskDev",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "katalonTask"
+                "name": "katalonTaskDev"
             }
         }
     ]

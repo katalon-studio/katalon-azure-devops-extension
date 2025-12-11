@@ -57,7 +57,7 @@ function getKsLocation(ksVersionNumber, ksLocation) {
       }
 
       const userhome = os.getUserHome();
-      const ksLocationParentDir = path.join(userhome, '.katalon', ksVersionNumber);
+      const ksLocationParentDir = path.join(userhome, '.katalon', `KRE-${ksVersionNumber}`);
       const katalonDoneFilePath = path.join(ksLocationParentDir, '.katalon.done');
 
       if (fs.existsSync(katalonDoneFilePath)) {
