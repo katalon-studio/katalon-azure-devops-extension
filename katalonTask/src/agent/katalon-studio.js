@@ -46,7 +46,29 @@ function getKsLocation(ksVersionNumber, ksLocation) {
   return http.request(releasesList, '', {}, 'GET')
     .then(({ body }) => {
       const osVersion = os.getVersion();
-      const ksVersion = body.find(item => item.version === ksVersionNumber
+
+      let resolvedVersionNumber = ksVersionNumber;
+      if (ksVersionNumber === 'latest') {
+        defaultLogger.info(`Finding latest version of OS: ${osVersion}`)
+        const osReleases = body.filter(item => item.os === osVersion);
+        if (osReleases.length === 0) {
+          // eslint-disable-next-line prefer-promise-reject-errors
+          return Promise.reject(`No releases found for OS: ${osVersion}`);
+        }
+        osReleases.sort((a, b) => {
+          const pa = a.version.split('.').map(Number);
+          const pb = b.version.split('.').map(Number);
+          for (let i = 0; i < Math.max(pa.length, pb.length); i += 1) {
+            const diff = (pb[i] || 0) - (pa[i] || 0);
+            if (diff !== 0) return diff;
+          }
+          return 0;
+        });
+        resolvedVersionNumber = osReleases[0].version;
+        defaultLogger.info(`Resolved 'latest' to Katalon Studio version ${resolvedVersionNumber}.`);
+      }
+
+      const ksVersion = body.find(item => item.version === resolvedVersionNumber
         && item.os === osVersion);
 
       const fileName = ksVersion.filename;
@@ -57,14 +79,14 @@ function getKsLocation(ksVersionNumber, ksLocation) {
       }
 
       const userhome = os.getUserHome();
-      const ksLocationParentDir = path.join(userhome, '.katalon', `KRE-${ksVersionNumber}`);
+      const ksLocationParentDir = path.join(userhome, '.katalon', `KRE-${resolvedVersionNumber}`);
       const katalonDoneFilePath = path.join(ksLocationParentDir, '.katalon.done');
 
       if (fs.existsSync(katalonDoneFilePath)) {
         return Promise.resolve({ ksLocationParentDir });
       }
 
-      defaultLogger.info(`Download Katalon Studio ${ksVersionNumber} to ${ksLocationParentDir}.`);
+      defaultLogger.info(`Download Katalon Studio ${resolvedVersionNumber} to ${ksLocationParentDir}.`);
       return file.downloadAndExtract(ksVersion.url, ksLocationParentDir, false)
         .then(() => {
           fs.writeFileSync(katalonDoneFilePath, '');

@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "katalon-dev",
     "name": "Katalon for Azure DevOps - Dev",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "publisher": "katalon-llc",
     "public": false,
     "galleryFlags": [
