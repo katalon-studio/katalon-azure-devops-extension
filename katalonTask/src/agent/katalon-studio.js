@@ -31,6 +31,61 @@ function find(startPath, filter, callback) {
   }
 }
 
+function sortByVersionDesc(releases) {
+  if (!releases || releases.length === 0) return [];
+  return releases.slice().sort((a, b) => {
+    const pa = a.version.split('.').map(Number);
+    const pb = b.version.split('.').map(Number);
+    for (let i = 0; i < Math.max(pa.length, pb.length); i += 1) {
+      const diff = (pb[i] || 0) - (pa[i] || 0);
+      if (diff !== 0) return diff;
+    }
+    return 0;
+  });
+}
+
+function resolveVersionNumber(ksVersionNumber, osVersion, releases) {
+  const osReleases = releases.filter(item => item.os === osVersion);
+
+  // "latest" — newest release overall
+  if (ksVersionNumber === 'latest') {
+    defaultLogger.info(`Finding latest version for OS: ${osVersion}`);
+    const sorted = sortByVersionDesc(osReleases);
+    const resolved = sorted.length > 0 ? sorted[0].version : null;
+    if (resolved) defaultLogger.info(`Resolved 'latest' to Katalon Studio version ${resolved}.`);
+    return resolved;
+  }
+
+  // "<major>-latest" — newest release within a given major version, e.g. "11-latest"
+  const majorLatestMatch = ksVersionNumber.match(/^(\d+)-latest$/);
+  if (majorLatestMatch) {
+    const major = parseInt(majorLatestMatch[1], 10);
+    defaultLogger.info(`Finding latest version for major ${major} and OS: ${osVersion}`);
+    const majorReleases = osReleases.filter(item => parseInt(item.version.split('.')[0], 10) === major);
+    const sorted = sortByVersionDesc(majorReleases);
+    const resolved = sorted.length > 0 ? sorted[0].version : null;
+    if (resolved) defaultLogger.info(`Resolved '${ksVersionNumber}' to Katalon Studio version ${resolved}.`);
+    return resolved;
+  }
+
+  // exact version — return as-is
+  return ksVersionNumber;
+}
+
+function resolveVersion(ksVersionNumber) {
+  return http.request(releasesList, '', {}, 'GET')
+    .then(({ body }) => {
+      const osVersion = os.getVersion();
+      const resolved = resolveVersionNumber(ksVersionNumber, osVersion, body);
+      if (!resolved) {
+        // eslint-disable-next-line prefer-promise-reject-errors
+        return Promise.reject(`No matching release found for version '${ksVersionNumber}' and OS: ${osVersion}`);
+      }
+      const release = body.find(item => item.version === resolved && item.os === osVersion);
+      return { version: resolved, url: release.url, filename: release.filename };
+    });
+}
+
 function getKsLocation(ksVersionNumber, ksLocation) {
   if (!ksVersionNumber && !ksLocation) {
     // eslint-disable-next-line prefer-promise-reject-errors
@@ -43,39 +98,12 @@ function getKsLocation(ksVersionNumber, ksLocation) {
     });
   }
 
-  return http.request(releasesList, '', {}, 'GET')
-    .then(({ body }) => {
-      const osVersion = os.getVersion();
-
-      let resolvedVersionNumber = ksVersionNumber;
-      if (ksVersionNumber === 'latest') {
-        defaultLogger.info(`Finding latest version of OS: ${osVersion}`)
-        const osReleases = body.filter(item => item.os === osVersion);
-        if (osReleases.length === 0) {
-          // eslint-disable-next-line prefer-promise-reject-errors
-          return Promise.reject(`No releases found for OS: ${osVersion}`);
-        }
-        osReleases.sort((a, b) => {
-          const pa = a.version.split('.').map(Number);
-          const pb = b.version.split('.').map(Number);
-          for (let i = 0; i < Math.max(pa.length, pb.length); i += 1) {
-            const diff = (pb[i] || 0) - (pa[i] || 0);
-            if (diff !== 0) return diff;
-          }
-          return 0;
-        });
-        resolvedVersionNumber = osReleases[0].version;
-        defaultLogger.info(`Resolved 'latest' to Katalon Studio version ${resolvedVersionNumber}.`);
-      }
-
-      const ksVersion = body.find(item => item.version === resolvedVersionNumber
-        && item.os === osVersion);
-
-      const fileName = ksVersion.filename;
-      const fileExtension = path.extname(fileName);
+  return resolveVersion(ksVersionNumber)
+    .then(({ version: resolvedVersionNumber, url, filename }) => {
+      const fileExtension = path.extname(filename);
       if (!['.zip', '.gz'].includes(fileExtension)) {
         // eslint-disable-next-line prefer-promise-reject-errors
-        return Promise.reject(`Unexpected file name ${fileName}`);
+        return Promise.reject(`Unexpected file name ${filename}`);
       }
 
       const userhome = os.getUserHome();
@@ -87,7 +115,7 @@ function getKsLocation(ksVersionNumber, ksLocation) {
       }
 
       defaultLogger.info(`Download Katalon Studio ${resolvedVersionNumber} to ${ksLocationParentDir}.`);
-      return file.downloadAndExtract(ksVersion.url, ksLocationParentDir, false)
+      return file.downloadAndExtract(url, ksLocationParentDir, false)
         .then(() => {
           fs.writeFileSync(katalonDoneFilePath, '');
           return Promise.resolve({ ksLocationParentDir });
@@ -138,4 +166,6 @@ module.exports = {
   },
 
   getKsLocation,
+
+  resolveVersion,
 };

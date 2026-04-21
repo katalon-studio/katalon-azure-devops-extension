@@ -19,7 +19,7 @@
             "type": "string",
             "label": "Download Katalon Studio version",
             "defaultValue": "",
-            "helpMarkDown": "E.g. `10.4.2` or `latest` to automatically use the most recent stable release. \nThe list of all releases can be retrieved from [here](https://github.com/katalon-studio/katalon-studio/releases)."
+            "helpMarkDown": "E.g. `10.4.2` for an exact version, `latest` for the newest stable release, or `11-latest` for the newest release within a major version. \nThe list of all releases can be retrieved from [here](https://github.com/katalon-studio/katalon-studio/releases)."
         },
         {
             "name": "location",
