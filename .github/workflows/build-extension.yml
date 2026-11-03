@@ -1,0 +1,47 @@
+name: Build extension
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Package ${{ matrix.flavor }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        flavor: [dev, prod]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: katalonTask/package-lock.json
+
+      - name: Install tfx-cli
+        run: npm install -g tfx-cli@0.24.2
+
+      # Builds with Babel, packs the .vsix, then runs verify-vsix.sh. Fails if the package is invalid.
+      - name: Build and verify
+        run: ./package-${{ matrix.flavor }}.sh
+
+      - name: Metadata and upload instructions
+        run: |
+          {
+            echo "## ${{ matrix.flavor }} package"
+            ./vsix-summary.sh "$(ls -t ./*.vsix | head -1)"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsix-${{ matrix.flavor }}
+          path: "*.vsix"
+          if-no-files-found: error
