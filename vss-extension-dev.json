@@ -2,8 +2,8 @@
     "manifestVersion": 1,
     "id": "katalon-dev",
     "name": "Katalon for Azure DevOps - Dev",
-    "version": "1.3.1",
-    "publisher": "katalon-dev",
+    "version": "1.3.0",
+    "publisher": "katalon-llc",
     "public": false,
     "galleryFlags": [
         "Paid",
@@ -23,7 +23,7 @@
         "Katalon Studio"
     ],
     "icons": {
-        "default": "images/katalon-logo-dev.png"
+        "default": "images/katalon-logo.png"
     },
     "files": [
         {
@@ -37,10 +37,10 @@
     },
     "links": {
         "getstarted": {
-            "uri": "https://github.com/katalon-studio/katalon-azure-devops-extension"
+            "uri": "https://docs.katalon.com"
         },
         "support": {
-            "uri": "https://github.com/katalon-studio/katalon-azure-devops-extension/issues"
+            "uri": "https://forum.katalon.com"
         },
         "pricing": {
             "path": "pricing.md"
@@ -51,7 +51,7 @@
     },
     "repository": {
         "type": "git",
-        "uri": "https://github.com/katalon-studio/katalon-azure-devops-extension"
+        "uri": "https://github.com/katalon-studio/katalon-studio"
     },
     "contributions": [
         {
