@@ -43,7 +43,9 @@ cat <<EOF
 **Upload**
 1. Download the \`.vsix\` from this run's artifacts.
 2. Open https://marketplace.visualstudio.com/manage and select the publisher \`$EXT_PUBLISHER\`. You must be a member of it.
-3. New extension: **New extension → Azure DevOps**, then upload the file. Existing extension: \`...\` next to \`$EXT_ID\`, then **Update**.
-4. The version must be higher than the one already published. Latest public version: https://marketplace.visualstudio.com/items?itemName=$EXT_PUBLISHER.$EXT_ID
+3. Find **$DISPLAY_NAME** in the list. The list shows display names, not ids.
+   - Not in the list: click **New extension → Azure DevOps** and upload the file.
+   - In the list: click \`...\` next to **$DISPLAY_NAME**, then **Update**, and upload the file.
+4. The version must be higher than the one already published. See the **Version** column on the manage page. A public extension also shows it at https://marketplace.visualstudio.com/items?itemName=$EXT_PUBLISHER.$EXT_ID
 5. Wait for validation. A private extension also needs **Share/Unshare** with the organization that tests it.
 EOF
