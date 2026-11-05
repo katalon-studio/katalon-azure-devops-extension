@@ -23,7 +23,7 @@
         "Katalon Studio"
     ],
     "icons": {
-        "default": "images/katalon-logo.png"
+        "default": "images/katalon-logo-dev.png"
     },
     "files": [
         {
@@ -37,10 +37,10 @@
     },
     "links": {
         "getstarted": {
-            "uri": "https://docs.katalon.com"
+            "uri": "https://github.com/katalon-studio/katalon-azure-devops-extension"
         },
         "support": {
-            "uri": "https://forum.katalon.com"
+            "uri": "https://github.com/katalon-studio/katalon-azure-devops-extension/issues"
         },
         "pricing": {
             "path": "pricing.md"
@@ -51,7 +51,7 @@
     },
     "repository": {
         "type": "git",
-        "uri": "https://github.com/katalon-studio/katalon-studio"
+        "uri": "https://github.com/katalon-studio/katalon-azure-devops-extension"
     },
     "contributions": [
         {
