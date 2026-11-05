@@ -19,6 +19,7 @@ DISPLAY_NAME="$(unzip -p "$VSIX" extension.vsixmanifest | sed -n 's:.*<DisplayNa
 EXT_ID="$(attr Id)"
 EXT_PUBLISHER="$(attr Publisher)"
 EXT_VERSION="$(attr Version)"
+TASK_REF="$(unzip -p "$VSIX" katalonTask/task.json | node -e 'const t=JSON.parse(require("fs").readFileSync(0,"utf8"));console.log(t.name+"@"+t.version.Major+" ("+t.id+")")')"
 
 if command -v sha256sum >/dev/null; then
   SHA256="$(sha256sum "$VSIX" | cut -d' ' -f1)"
@@ -37,6 +38,7 @@ cat <<EOF
 | Extension id | \`$EXT_ID\` |
 | Publisher | \`$EXT_PUBLISHER\` |
 | Version | \`$EXT_VERSION\` |
+| Pipeline task | \`$TASK_REF\` |
 
 **Upload**
 1. Download the \`.vsix\` from this run's artifacts.

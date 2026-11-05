@@ -80,6 +80,9 @@ else
   done
 fi
 
+TASK_IDENTITY="$(printf '%s' "$TASK_JSON" | node -e 'const t=JSON.parse(require("fs").readFileSync(0,"utf8"));console.log(t.name+" ("+t.id+")")' 2>/dev/null)"
+pass "task $TASK_IDENTITY"
+
 echo "5. Versions"
 TASK_VERSION="$(printf '%s' "$TASK_JSON" | node -e 'const v=JSON.parse(require("fs").readFileSync(0,"utf8")).version;console.log(v.Major+"."+v.Minor+"."+v.Patch)' 2>/dev/null)"
 PKG_JSON="$(read_entry "$TASK_DIR/package.json")"

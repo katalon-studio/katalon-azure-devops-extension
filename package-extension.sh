@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 # Builds a .vsix from one manifest and verifies it.
+# Usage: package-extension.sh <manifest.json> [task-overrides.json]
 # Use the wrappers instead of calling this directly:
 #   ./package-dev.sh    builds from vss-extension-dev.json (private test extension)
 #   ./package-prod.sh   builds from vss-extension.json (public release)
+# The optional overrides file replaces fields of katalonTask/task.json inside the package only.
+# The dev build needs its own task id and name: an organization allows each task id once,
+# and the production extension already owns the id in task.json.
 # Needs: node 20, npm, tfx (npm install -g tfx-cli), zip, unzip.
 
 # Restart in bash when started with sh, which lacks features used below.
@@ -12,8 +16,9 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 MANIFEST="${1:-}"
-if [ ! -f "$MANIFEST" ]; then
-  echo "Usage: $0 <manifest.json>   (for example vss-extension-dev.json)"
+TASK_OVERRIDES="${2:-}"
+if [ ! -f "$MANIFEST" ] || { [ -n "$TASK_OVERRIDES" ] && [ ! -f "$TASK_OVERRIDES" ]; }; then
+  echo "Usage: $0 <manifest.json> [task-overrides.json]   (for example vss-extension-dev.json)"
   exit 2
 fi
 
@@ -34,12 +39,26 @@ echo "== Building $EXTENSION_FILENAME"
   npm prune --omit=dev
 )
 
+TMP_DIR="$(mktemp -d)"
+TASK_JSON=katalonTask/task.json
+cp "$TASK_JSON" "$TMP_DIR/task.json.orig"
+# Always put the original task.json back, even when a step below fails.
+trap 'cp "$TMP_DIR/task.json.orig" "$TASK_JSON"; rm -rf "$TMP_DIR"' EXIT
+
+if [ -n "$TASK_OVERRIDES" ]; then
+  node -e '
+    const fs = require("fs");
+    const [taskPath, overridesPath] = process.argv.slice(1);
+    const task = JSON.parse(fs.readFileSync(taskPath, "utf8"));
+    const merged = Object.assign(task, JSON.parse(fs.readFileSync(overridesPath, "utf8")));
+    fs.writeFileSync(taskPath, JSON.stringify(merged, null, 4) + "\n");
+  ' "$TASK_JSON" "$TASK_OVERRIDES"
+fi
+
 rm -f "$EXTENSION_FILENAME"
 tfx extension create --manifest-globs "$MANIFEST"
 
 # The Marketplace rejects arm64 entries in [Content_Types].xml
-TMP_DIR="$(mktemp -d)"
-trap 'rm -rf "$TMP_DIR"' EXIT
 unzip -p "$EXTENSION_FILENAME" '\[Content_Types\].xml' | grep -v 'arm64' > "$TMP_DIR/[Content_Types].xml"
 (cd "$TMP_DIR" && zip "$OLDPWD/$EXTENSION_FILENAME" '[Content_Types].xml')
 
